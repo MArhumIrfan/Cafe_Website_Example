@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Brew | Artisan Bistro & Specialty Coffee Bar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        lightBg: '#F5ECE0',
+                        lightCard: '#EAD7C3',
+                        lightAccent: '#DFC5A8',
+                        lightText: '#342319',
+                        darkBg: '#1A110D',
+                        darkCard: '#271B16',
+                        darkAccent: '#3B2921',
+                        darkText: '#F7F1EA',
+                        warmCopper: '#B46A36',
+                        amberGold: '#C98D53',
+                        creamMelt: '#FFF6E9',
+                        espressoDeep: '#1F140E'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.04);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C98D53;
+            border-radius: 4px;
+        }
+        .grain-overlay {
+            background-image: radial-gradient(rgba(0,0,0,0.035) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+        .shimmer-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-lightBg text-lightText dark:bg-darkBg dark:text-darkText antialiased selection:bg-amberGold selection:text-darkBg">
+
+    <!-- Top Navigation -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-lightBg/90 dark:bg-darkBg/90 backdrop-blur-md border-b border-black/10 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-amberGold flex items-center justify-center text-darkBg font-bold text-lg group-hover:scale-105 transition-transform shadow-md">
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif font-bold text-lg tracking-wider">THE DAILY BREW</span>
+                    <span class="text-[10px] text-warmCopper dark:text-amberGold tracking-widest uppercase font-semibold">Artisan Bistro & Coffee Bar</span>
+                </div>
+            </a>
+            
+            <nav class="hidden md:flex items-center gap-7 font-medium text-sm tracking-wide">
+                <a href="#philosophy" class="hover:text-amberGold transition-colors">Hospitality</a>
+                <a href="#trio-3d-experience" class="text-amberGold font-semibold hover:opacity-85 transition-opacity flex items-center gap-1.5">
+                    <i class="fa-solid fa-cube text-xs"></i> 3D Platter
+                </a>
+                <a href="#menu" class="hover:text-amberGold transition-colors">Artisan Menu</a>
+                <a href="#staff" class="hover:text-amberGold transition-colors">Our Baristas</a>
+                <a href="#gallery" class="hover:text-amberGold transition-colors">Atmosphere</a>
+                <a href="#events" class="hover:text-amberGold transition-colors">Events</a>
+                <a href="#location" class="hover:text-amberGold transition-colors">Visit Us</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center justify-center text-amberGold hover:scale-105 transition-all shadow-sm" aria-label="Toggle Dark/Light Mode">
+                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                </button>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hidden sm:flex w-9 h-9 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 items-center justify-center hover:bg-amberGold hover:text-darkBg transition-all" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="#menu" class="hidden lg:inline-flex px-5 py-2.5 rounded-full bg-amberGold text-darkBg font-semibold text-xs tracking-wider uppercase hover:opacity-90 transition-all shadow-lg shadow-amberGold/20">
+                    Order Pick-up
+                </a>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-2xl focus:outline-none ml-1">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-lightCard dark:bg-darkCard border-b border-black/10 dark:border-white/10 px-6 py-6 flex flex-col gap-4 shadow-xl">
+            <a href="#philosophy" class="mobile-link text-base hover:text-amberGold">Hospitality & Story</a>
+            <a href="#trio-3d-experience" class="mobile-link text-base text-amberGold font-semibold">3D Platter Experience</a>
+            <a href="#menu" class="mobile-link text-base hover:text-amberGold">Artisan Menu</a>
+            <a href="#staff" class="mobile-link text-base hover:text-amberGold">Friendly Baristas</a>
+            <a href="#gallery" class="mobile-link text-base hover:text-amberGold">Atmosphere Gallery</a>
+            <a href="#events" class="mobile-link text-base hover:text-amberGold">Workshops & Events</a>
+            <a href="#location" class="mobile-link text-base hover:text-amberGold">Location & Hours</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden grain-overlay">
+        <!-- Ambient lighting glows -->
+        <div class="absolute top-1/4 left-10 w-96 h-96 bg-amberGold/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-[30rem] h-[30rem] bg-warmCopper/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <div class="lg:col-span-7 flex flex-col items-start text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amberGold/20 border border-amberGold/40 text-warmCopper dark:text-amberGold text-xs font-semibold tracking-wider uppercase mb-6 shadow-sm">
+                    <i class="fa-solid fa-heart"></i> Warm Welcomes & Handcrafted Fare
+                </div>
+                <h1 class="font-serif text-5xl md:text-7xl font-bold leading-tight mb-6">
+                    Pouring Warmth, <br>Crafting <span class="text-amberGold italic">Every Bite.</span>
+                </h1>
+                <p class="text-base md:text-lg font-light leading-relaxed mb-8 max-w-xl opacity-90">
+                    Welcome to your neighborhood haven. Where award-winning roasters greet you by name, sourdough paninis are grilled to golden perfection, and every cold craft beverage is prepared with care.
+                </p>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#trio-3d-experience" class="px-7 py-3.5 rounded-full bg-amberGold text-darkBg font-bold text-sm hover:opacity-90 transition-all shadow-xl shadow-amberGold/20 flex items-center gap-2.5">
+                        <span>Explore 3D Craft Platter</span>
+                        <i class="fa-solid fa-cube"></i>
+                    </a>
+                    <a href="#menu" class="px-7 py-3.5 rounded-full bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/20 font-semibold text-sm hover:border-amberGold transition-all">
+                        View Scratch Menu
+                    </a>
+                </div>
+                
+                <!-- Hospitality & Service Badges Row -->
+                <div class="grid grid-cols-3 gap-6 mt-14 pt-8 border-t border-black/10 dark:border-white/10 w-full max-w-lg">
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-amberGold">100%</div>
+                        <div class="text-xs uppercase tracking-wider mt-1 opacity-75 font-medium">From-Scratch Kitchen</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-warmCopper dark:text-amberGold">★ 4.9</div>
+                        <div class="text-xs uppercase tracking-wider mt-1 opacity-75 font-medium">Guest Service Rating</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-amberGold">Micro-Lot</div>
+                        <div class="text-xs uppercase tracking-wider mt-1 opacity-75 font-medium">Direct Sourced Roasts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image Showcase -->
+            <div class="lg:col-span-5 relative">
+                <div class="relative mx-auto w-full max-w-md rounded-3xl overflow-hidden border-2 border-black/10 dark:border-white/15 shadow-2xl group">
+                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800" alt="Bistro Barista Welcoming Atmosphere" class="w-full h-[480px] object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x800/EAD7C3/342319?text=Artisan+Cafe'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-lightCard/95 dark:bg-darkCard/95 backdrop-blur-md border border-black/10 dark:border-white/10 flex items-center justify-between text-lightText dark:text-darkText shadow-lg">
+                        <div>
+                            <span class="text-[11px] text-amberGold uppercase tracking-widest block font-bold">Chef & Barista Special</span>
+                            <span class="font-serif font-bold text-base">Toasted Panini & Espresso Crema</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amberGold/20 text-warmCopper dark:text-amberGold text-xs font-bold border border-amberGold/40">Handmade</span>
+                    </div>
+                </div>
+                <!-- Staff Hospitality Badge -->
+                <div class="absolute -top-4 -left-4 bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/15 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-amberGold/20 flex items-center justify-center text-amberGold">
+                        <i class="fa-solid fa-face-smile text-base"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold">Warm & Attentive Staff</div>
+                        <div class="text-[10px] opacity-70">Always greeted with genuine smiles</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Interactive Cafe Trio Showcase Section -->
+    <section id="trio-3d-experience" class="py-24 bg-lightCard/60 dark:bg-darkCard/60 border-y border-black/10 dark:border-white/10 relative overflow-hidden">
+        
+        <div class="absolute inset-0 pointer-events-none opacity-40">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-amberGold/15 rounded-full blur-[130px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3 inline-flex items-center gap-2">
+                    <i class="fa-solid fa-sparkles"></i> Procedural 3D Texture Platter
+                </span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">
+                    The Artisan Trio Experience
+                </h2>
+                <p class="text-sm md:text-base opacity-80 leading-relaxed">
+                    Crafted with real-time procedural bump maps and wood textures. Scroll or drag to spin our scratch kitchen signature trio: the hand-glazed embossed ceramic mug with rising steam, grilled sourdough panini, and cold craft refresher.
+                </p>
+
+                <!-- Interactive View Selector Pills -->
+                <div class="flex flex-wrap items-center justify-center gap-2.5 mt-6">
+                    <button onclick="setCameraFocus('all')" id="btn-focus-all" class="focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-amberGold text-darkBg shadow-md transition-all">
+                        <i class="fa-solid fa-layer-group mr-1.5"></i> Full Board
+                    </button>
+                    <button onclick="setCameraFocus('mug')" id="btn-focus-mug" class="focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold transition-all">
+                        <i class="fa-solid fa-mug-hot mr-1.5 text-amberGold"></i> Hand-Poured Mug
+                    </button>
+                    <button onclick="setCameraFocus('sandwich')" id="btn-focus-sandwich" class="focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold transition-all">
+                        <i class="fa-solid fa-bread-slice mr-1.5 text-amberGold"></i> Artisan Panini
+                    </button>
+                    <button onclick="setCameraFocus('drink')" id="btn-focus-drink" class="focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold transition-all">
+                        <i class="fa-solid fa-wine-glass mr-1.5 text-amberGold"></i> Cold Craft Drink
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stage Grid: Left Staff Compliments + Center 3D Stage + Right Kitchen Craft -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                
+                <!-- Left Card: Friendly Staff Focus -->
+                <div class="lg:col-span-3 flex flex-col items-center p-7 rounded-3xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 shadow-xl order-2 lg:order-1">
+                    <div class="w-16 h-16 rounded-full bg-amberGold/20 border border-amberGold/40 flex items-center justify-center text-amberGold text-2xl mb-4 shadow-inner">
+                        <i class="fa-solid fa-mug-saucer"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-warmCopper dark:text-amberGold font-bold uppercase tracking-wider mb-1">
+                        <span>Attentive Hospitality</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-lg mb-2 text-center">Service with Warmth</h3>
+                    <p class="text-xs text-center leading-relaxed opacity-75 mb-4">
+                        "The staff always remember my custom order and smile like family." We believe genuine connection is the primary ingredient of memorable coffee mornings.
+                    </p>
+                    <div class="w-full pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] opacity-75">
+                        <span>Barista Certified</span>
+                        <span class="text-amberGold font-semibold">100% Attentive</span>
+                    </div>
+                </div>
+
+                <!-- Center 3D Three.js Canvas Container -->
+                <div class="lg:col-span-6 relative flex flex-col items-center order-1 lg:order-2">
+                    
+                    <div id="trio-canvas-container" class="w-full h-[470px] md:h-[530px] rounded-3xl bg-gradient-to-b from-lightBg/90 to-lightCard dark:from-darkBg/90 dark:to-darkCard border-2 border-black/10 dark:border-white/15 shadow-2xl relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing">
+                        
+                        <!-- Real-time Loading Overlay -->
+                        <div id="trio-canvas-loader" class="absolute inset-0 flex items-center justify-center bg-lightBg/95 dark:bg-darkBg/95 z-20 transition-opacity duration-500">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-10 h-10 border-4 border-amberGold border-t-transparent rounded-full animate-spin"></div>
+                                <span class="text-xs font-semibold tracking-wider uppercase opacity-80">Generating Wood Grain, Ceramic & Grill Textures...</span>
+                            </div>
+                        </div>
+
+                        <!-- Active Item Inspector Tooltip overlay -->
+                        <div id="item-tooltip" class="absolute top-5 left-5 pointer-events-none z-10 bg-lightBg/90 dark:bg-darkBg/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-black/10 dark:border-white/15 shadow-lg transition-all opacity-95">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amberGold animate-pulse"></span>
+                                <span id="tooltip-title" class="font-serif font-bold text-xs tracking-wide">Interactive Craft Platter</span>
+                            </div>
+                            <span id="tooltip-sub" class="text-[11px] opacity-75 block mt-0.5">Drag to orbit or scroll page to turn</span>
+                        </div>
+
+                        <!-- Scroll Hint Badge -->
+                        <div class="absolute bottom-5 right-5 pointer-events-none z-10 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-lightBg/80 dark:bg-darkBg/80 backdrop-blur-sm border border-black/10 dark:border-white/10 text-[11px] opacity-80">
+                            <i class="fa-solid fa-arrows-spin text-amberGold"></i>
+                            <span>Drag or Scroll to inspect</span>
+                        </div>
+                    </div>
+
+                    <!-- Trio Item Labels -->
+                    <div class="mt-4 flex items-center gap-7 text-xs opacity-75 font-medium">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-mug-hot text-amberGold"></i> Embossed Mug</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-bread-slice text-amberGold"></i> Grilled Sourdough Panini</span>
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-glass-water text-amberGold"></i> Craft Cold Tea</span>
+                    </div>
+                </div>
+
+                <!-- Right Card: Kitchen Scratch Craft Focus -->
+                <div class="lg:col-span-3 flex flex-col items-center p-7 rounded-3xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 shadow-xl order-3">
+                    <div class="w-16 h-16 rounded-full bg-warmCopper/20 border border-warmCopper/40 flex items-center justify-center text-warmCopper dark:text-amberGold text-2xl mb-4 shadow-inner">
+                        <i class="fa-solid fa-kitchen-set"></i>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-warmCopper dark:text-amberGold font-bold uppercase tracking-wider mb-1">
+                        <span>Scratch Kitchen</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-lg mb-2 text-center">Artisan Handcrafted</h3>
+                    <p class="text-xs text-center leading-relaxed opacity-75 mb-4">
+                        Zero shortcuts. Breads fermented 36 hours for rich open crumb, house-cured meats, simmered berry compotes, and dressings emulsified fresh every single sunrise.
+                    </p>
+                    <div class="w-full pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] opacity-75">
+                        <span>Local Farms</span>
+                        <span class="text-amberGold font-semibold">Slow Fermented</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Backstory & Philosophy Section -->
+    <section id="philosophy" class="py-24 relative grain-overlay">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 relative">
+                    <div class="relative rounded-3xl overflow-hidden border border-black/10 dark:border-white/15 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=800" alt="Cafe Barista Pouring Coffee" class="w-full h-[500px] object-cover" onerror="this.src='https://placehold.co/600x800/EAD7C3/342319?text=Artisan+Craft'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-75"></div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-amberGold text-darkBg p-6 rounded-3xl shadow-2xl hidden md:block max-w-xs">
+                        <div class="font-serif font-bold text-3xl mb-1">Since 2018</div>
+                        <p class="text-xs font-semibold leading-relaxed">Built on two principles: extraordinary coffee extraction and making every human feel genuinely cared for.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 flex flex-col items-start">
+                    <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3">Hospitality & Craft</span>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold leading-tight mb-6">
+                        Good Food, Great Coffee, and People Who Genuinely Care.
+                    </h2>
+                    <p class="text-base leading-relaxed mb-6 font-light opacity-90">
+                        The Daily Brew was founded with an unpretentious mission: to bridge precision culinary craftsmanship with genuine neighborhood hospitality. We reject robotic quick-service in favor of friendly hellos, bespoke recommendations, and meticulously crafted fare.
+                    </p>
+                    <p class="text-sm md:text-base leading-relaxed mb-8 font-light opacity-80">
+                        Our green coffee is hand-selected from fair-yield micro-lots in Colombia, Ethiopia, and Guatemala, then custom-roasted in small batches. In the kitchen, our chefs press crusty sandwiches on heirloom sourdough and craft velvety house sauces from scratch.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+                        <div class="p-5 rounded-2xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 shadow-sm">
+                            <div class="text-amberGold text-lg font-bold mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-heart-pulse"></i> Hospitable & Attentive
+                            </div>
+                            <p class="text-xs leading-relaxed opacity-80">Baristas who listen, recommend pairings with enthusiasm, and remember your favourite cup every single morning.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 shadow-sm">
+                            <div class="text-warmCopper dark:text-amberGold text-lg font-bold mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-utensils"></i> Fresh Kitchen Scratch
+                            </div>
+                            <p class="text-xs leading-relaxed opacity-80">Slow-braised meats, farm eggs, artisan sourdough, and house-pressed cold drinks made fresh every hour.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 bg-lightCard/60 dark:bg-darkCard/60 border-y border-black/10 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3 block">Craft Kitchen & Roastery</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">Our Handcrafted Menu</h2>
+                <p class="text-sm md:text-base opacity-80">
+                    Prepared to order with scratch ingredients, organic heirloom grains, and direct-trade micro-lot roasts.
+                </p>
+            </div>
+
+            <!-- Menu Category Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="switchTab('coffee')" id="tab-coffee" class="menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-amberGold text-darkBg shadow-md">
+                    <i class="fa-solid fa-mug-hot mr-1.5"></i> Specialty Roasts
+                </button>
+                <button onclick="switchTab('sandwiches')" id="tab-sandwiches" class="menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold">
+                    <i class="fa-solid fa-bread-slice mr-1.5"></i> Grilled Paninis & Sandwiches
+                </button>
+                <button onclick="switchTab('drinks')" id="tab-drinks" class="menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold">
+                    <i class="fa-solid fa-wine-glass mr-1.5"></i> Cold Craft Refreshers
+                </button>
+                <button onclick="switchTab('bakery')" id="tab-bakery" class="menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold">
+                    <i class="fa-solid fa-cookie-bite mr-1.5"></i> Scratch Bakery
+                </button>
+            </div>
+
+            <!-- Dynamic Menu Items Container -->
+            <div id="menu-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Staff Compliments & Meet The Team Section -->
+    <section id="staff" class="py-24 relative grain-overlay">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3 block">The People Behind Your Cup</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">Passionate & Friendly Baristas</h2>
+                <p class="text-sm md:text-base opacity-80">
+                    A great cafe is only as wonderful as the hands that craft your meal and the warmth that welcomes you at the counter.
+                </p>
+            </div>
+
+            <!-- Barista Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <!-- Staff 1 -->
+                <div class="p-6 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 shadow-xl flex flex-col items-center text-center group hover:border-amberGold/50 transition-all">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-amberGold shadow-md">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Head Barista Julian" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/C98D53/FFFFFF?text=Julian'">
+                    </div>
+                    <span class="text-xs font-semibold text-amberGold uppercase tracking-wider">Head Barista & Roaster</span>
+                    <h3 class="font-serif font-bold text-xl mt-1 mb-2">Julian Chen</h3>
+                    <p class="text-xs opacity-75 leading-relaxed mb-4">
+                        "I love that 90% of our regulars don't even have to order—we start dialing in their pour-over as soon as they step through the doors."
+                    </p>
+                    <div class="flex items-center gap-1 text-amberGold text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <span class="text-[11px] opacity-75 ml-1 text-lightText dark:text-darkText font-medium">8 Yrs Craft</span>
+                    </div>
+                </div>
+
+                <!-- Staff 2 -->
+                <div class="p-6 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 shadow-xl flex flex-col items-center text-center group hover:border-amberGold/50 transition-all">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-amberGold shadow-md">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400" alt="Executive Chef Mateo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/C98D53/FFFFFF?text=Mateo'">
+                    </div>
+                    <span class="text-xs font-semibold text-amberGold uppercase tracking-wider">Executive Kitchen Chef</span>
+                    <h3 class="font-serif font-bold text-xl mt-1 mb-2">Mateo Rivera</h3>
+                    <p class="text-xs opacity-75 leading-relaxed mb-4">
+                        "Toasting a panini is an art. The cheese must achieve that velvety silkiness while the sourdough retains a deep, crunching snap."
+                    </p>
+                    <div class="flex items-center gap-1 text-amberGold text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <span class="text-[11px] opacity-75 ml-1 text-lightText dark:text-darkText font-medium">From-Scratch Master</span>
+                    </div>
+                </div>
+
+                <!-- Staff 3 -->
+                <div class="p-6 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 shadow-xl flex flex-col items-center text-center group hover:border-amberGold/50 transition-all">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-amberGold shadow-md">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=400" alt="Guest Lead Chloe" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/C98D53/FFFFFF?text=Chloe'">
+                    </div>
+                    <span class="text-xs font-semibold text-amberGold uppercase tracking-wider">Hospitality Lead</span>
+                    <h3 class="font-serif font-bold text-xl mt-1 mb-2">Chloe Bennett</h3>
+                    <p class="text-xs opacity-75 leading-relaxed mb-4">
+                        "Whether someone is rushing to a meeting or settling in with a journal for three hours, they deserve our undivided warmth and care."
+                    </p>
+                    <div class="flex items-center gap-1 text-amberGold text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <span class="text-[11px] opacity-75 ml-1 text-lightText dark:text-darkText font-medium">Guest Favorite</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Reviews Banner -->
+            <div class="p-8 rounded-3xl bg-lightCard/70 dark:bg-darkCard/70 border border-black/10 dark:border-white/10 shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <span class="text-xs font-bold text-amberGold uppercase tracking-widest block mb-2">Real Guest Words</span>
+                        <h4 class="font-serif text-2xl font-bold mb-3">"The friendliest baristas in the city, hands down."</h4>
+                        <p class="text-xs leading-relaxed opacity-80 italic">
+                            "The grilled gruyère panini tasted like pure heaven, and Julian noticed I had a cough and brewed me a custom honey lemon steam without even asking. This cafe has a soul."
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-start md:justify-end gap-6">
+                        <div class="text-center">
+                            <div class="font-serif text-4xl font-bold text-amberGold">4.9/5</div>
+                            <div class="text-[11px] opacity-70 mt-1 uppercase font-semibold">Over 1,200 Reviews</div>
+                        </div>
+                        <div class="h-12 w-px bg-black/10 dark:border-white/10"></div>
+                        <div class="text-center">
+                            <div class="font-serif text-4xl font-bold text-warmCopper dark:text-amberGold">98%</div>
+                            <div class="text-[11px] opacity-70 mt-1 uppercase font-semibold">Return Visitors</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Collage Gallery Section -->
+    <section id="gallery" class="py-24 bg-lightCard/50 dark:bg-darkCard/50 border-y border-black/10 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3 block">Atmosphere & Bites</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">Glimpse Inside The Bistro</h2>
+                <p class="text-sm md:text-base opacity-80">
+                    Sunlit wooden tables, sizzling grill irons, warm porcelain cups, and the cheerful bustle of human connection.
+                </p>
+            </div>
+
+            <!-- Asymmetric Editorial Photo Collage -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 h-auto md:h-[620px]">
+                <div class="col-span-2 md:col-span-2 md:row-span-2 relative rounded-3xl overflow-hidden group border border-black/10 dark:border-white/10 shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=1000" alt="Cafe Dining Room" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/800x800/EAD7C3/342319?text=Cafe+Interior'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8 text-white">
+                        <div>
+                            <span class="text-xs text-amberGold uppercase tracking-widest block font-bold">Community Lounge</span>
+                            <h3 class="font-serif text-2xl">Warm Oak Tables & Morning Sunbeams</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-1 md:row-span-1 relative rounded-3xl overflow-hidden group border border-black/10 dark:border-white/10 shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=600" alt="Toasted Panini" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x400/EAD7C3/342319?text=Artisan+Panini'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5 text-white">
+                        <span class="font-serif text-base">Toasted Paninis</span>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-1 md:row-span-1 relative rounded-3xl overflow-hidden group border border-black/10 dark:border-white/10 shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&q=80&w=600" alt="Cold Craft Tea Drink" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x400/EAD7C3/342319?text=Cold+Craft+Drink'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5 text-white">
+                        <span class="font-serif text-base">Craft Cold Tonics</span>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-1 md:row-span-1 relative rounded-3xl overflow-hidden group border border-black/10 dark:border-white/10 shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600" alt="Barista Latte Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x400/EAD7C3/342319?text=Latte+Art'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5 text-white">
+                        <span class="font-serif text-base">Micro-Lot Extractions</span>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-1 md:row-span-1 relative rounded-3xl overflow-hidden group border border-black/10 dark:border-white/10 shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600" alt="Bistro Kitchen prep" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x400/EAD7C3/342319?text=Chef+Kitchen'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5 text-white">
+                        <span class="font-serif text-base">Scratch Kitchen Prep</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events & Gatherings Section -->
+    <section id="events" class="py-24 relative grain-overlay">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3 block">Community & Education</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">Evenings at The Daily Brew</h2>
+                <p class="text-sm md:text-base opacity-80">
+                    Come gather for acoustic jazz sets, barista brewing masterclasses, and sensory coffee cupping tastings.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Event 1 -->
+                <div class="p-8 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 flex flex-col justify-between hover:border-amberGold/50 transition-all shadow-lg group">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-full bg-amberGold/20 text-warmCopper dark:text-amberGold text-xs font-bold uppercase tracking-wider">Live Music</span>
+                            <span class="text-xs opacity-70"><i class="fa-regular fa-calendar mr-1.5"></i> Oct 14, 7:00 PM</span>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-amberGold transition-colors">Acoustic Bistro Jazz</h3>
+                        <p class="text-xs leading-relaxed opacity-75 mb-6">
+                            Warm double-bass and archtop guitar melodies, warm panini platters, and espresso tonics served until late.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-5 border-t border-black/10 dark:border-white/10">
+                        <span class="text-xs text-amberGold font-medium"><i class="fa-solid fa-chair mr-1"></i> 10 Seats Open</span>
+                        <button onclick="openModal('Acoustic Bistro Jazz')" class="px-4 py-2 rounded-full bg-amberGold text-darkBg font-bold text-xs hover:opacity-90 transition-all shadow-md">
+                            Reserve Seat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="p-8 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 flex flex-col justify-between hover:border-warmCopper/50 transition-all shadow-lg group">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-full bg-warmCopper/20 text-warmCopper dark:text-amberGold text-xs font-bold uppercase tracking-wider">Masterclass</span>
+                            <span class="text-xs opacity-70"><i class="fa-regular fa-calendar mr-1.5"></i> Oct 21, 10:30 AM</span>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-warmCopper transition-colors">Latte Art & Microfoam</h3>
+                        <p class="text-xs leading-relaxed opacity-75 mb-6">
+                            Julian teaches milk texturing mechanics, espresso extraction dial-ins, and how to pour swans, hearts, and rosettas like a pro.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-5 border-t border-black/10 dark:border-white/10">
+                        <span class="text-xs text-amberGold font-medium"><i class="fa-solid fa-chair mr-1"></i> 5 Spots Open</span>
+                        <button onclick="openModal('Latte Art & Microfoam Masterclass')" class="px-4 py-2 rounded-full bg-warmCopper text-white font-bold text-xs hover:opacity-90 transition-all shadow-md">
+                            Reserve Seat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="p-8 rounded-3xl bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/10 flex flex-col justify-between hover:border-amberGold/50 transition-all shadow-lg group">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 rounded-full bg-amberGold/20 text-warmCopper dark:text-amberGold text-xs font-bold uppercase tracking-wider">Sensory Cupping</span>
+                            <span class="text-xs opacity-70"><i class="fa-regular fa-calendar mr-1.5"></i> Oct 28, 5:00 PM</span>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-amberGold transition-colors">Micro-Lot Tasting Flights</h3>
+                        <p class="text-xs leading-relaxed opacity-75 mb-6">
+                            Taste six rare single-origin coffees side-by-side with fresh baked pairing bites from our pastry oven.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-5 border-t border-black/10 dark:border-white/10">
+                        <span class="text-xs text-amberGold font-medium"><i class="fa-solid fa-chair mr-1"></i> 8 Spots Open</span>
+                        <button onclick="openModal('Micro-Lot Tasting Flights')" class="px-4 py-2 rounded-full bg-amberGold text-darkBg font-bold text-xs hover:opacity-90 transition-all shadow-md">
+                            Reserve Seat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location & Hours Section -->
+    <section id="location" class="py-24 bg-lightCard/60 dark:bg-darkCard/60 border-y border-black/10 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Details -->
+                <div class="lg:col-span-6 flex flex-col items-start">
+                    <span class="text-warmCopper dark:text-amberGold text-xs font-bold tracking-widest uppercase mb-3">Visit The Bistro</span>
+                    <h2 class="font-serif text-4xl font-bold mb-6">Come Say Hello</h2>
+                    <p class="text-base mb-8 font-light opacity-80 leading-relaxed">
+                        Whether you are here for an unhurried brunch, a brisk morning flat white, or to collaborate with friends on fast fiber Wi-Fi, you will always be greeted like family.
+                    </p>
+
+                    <div class="space-y-5 w-full mb-8">
+                        <div class="flex items-start gap-4 p-4 rounded-2xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10">
+                            <div class="w-10 h-10 rounded-full bg-amberGold/20 text-amberGold flex items-center justify-center shrink-0 text-base">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Bistro Address</h4>
+                                <p class="text-xs opacity-80 leading-relaxed">428 Roasters Way, Artisan Quarter, New York, NY 10012</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 rounded-2xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10">
+                            <div class="w-10 h-10 rounded-full bg-warmCopper/20 text-warmCopper dark:text-amberGold flex items-center justify-center shrink-0 text-base">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Opening Hours</h4>
+                                <p class="text-xs opacity-80 leading-relaxed">
+                                    Monday – Friday: 7:00 AM – 7:00 PM<br>
+                                    Saturday – Sunday: 8:00 AM – 8:00 PM
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-full bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 font-semibold text-xs tracking-wider uppercase hover:border-amberGold transition-all flex items-center gap-2.5">
+                            <i class="fa-brands fa-instagram text-amberGold text-base"></i>
+                            <span>Follow @dailybrewbistro</span>
+                        </a>
+                        <span class="text-xs text-amberGold font-medium"><i class="fa-solid fa-wifi mr-1"></i> Gigabit Guest Wi-Fi</span>
+                    </div>
+                </div>
+
+                <!-- Simulated Interactive Map Card -->
+                <div class="lg:col-span-6">
+                    <div class="rounded-3xl overflow-hidden border border-black/10 dark:border-white/20 shadow-2xl bg-lightBg dark:bg-darkBg p-4">
+                        <div class="w-full h-[380px] rounded-2xl overflow-hidden relative border border-black/10 dark:border-white/10 bg-lightCard/50 dark:bg-darkCard/50 flex items-center justify-center">
+                            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#C98D53_1.2px,transparent_1.2px)] [background-size:18px_18px]"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
+                                <div class="w-14 h-14 rounded-full bg-amberGold text-darkBg flex items-center justify-center text-xl shadow-xl animate-bounce mb-3">
+                                    <i class="fa-solid fa-mug-hot"></i>
+                                </div>
+                                <h3 class="font-serif text-xl font-bold mb-1">The Daily Brew</h3>
+                                <p class="text-xs opacity-75 mb-5">428 Roasters Way, Manhattan, NY</p>
+                                <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-warmCopper text-white font-bold text-xs hover:opacity-90 transition-all shadow-md flex items-center gap-2">
+                                    <i class="fa-solid fa-diamond-turn-right"></i>
+                                    <span>Open In Google Maps</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-lightCard dark:bg-darkCard border-t border-black/10 dark:border-white/10 py-16">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            <div class="md:col-span-1">
+                <div class="flex items-center gap-2.5 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-amberGold flex items-center justify-center text-darkBg font-bold text-sm">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+                    <span class="font-serif font-bold text-base tracking-wider">THE DAILY BREW</span>
+                </div>
+                <p class="text-xs leading-relaxed mb-4 opacity-75">
+                    An artisan bistro and specialty roastery committed to genuine hospitality, scratch culinary prep, and direct-trade sourcing.
+                </p>
+                <div class="flex items-center gap-2.5">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-amberGold hover:text-darkBg transition-all" title="Instagram">
+                        <i class="fa-brands fa-instagram text-xs"></i>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-amberGold hover:text-darkBg transition-all" title="Facebook">
+                        <i class="fa-brands fa-facebook-f text-xs"></i>
+                    </a>
+                    <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-amberGold hover:text-darkBg transition-all" title="TikTok">
+                        <i class="fa-brands fa-tiktok text-xs"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-serif font-bold text-xs text-amberGold uppercase tracking-wider mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-xs opacity-80">
+                    <li><a href="#trio-3d-experience" class="hover:text-amberGold transition-colors">3D Craft Platter</a></li>
+                    <li><a href="#menu" class="hover:text-amberGold transition-colors">Seasonal Menu</a></li>
+                    <li><a href="#staff" class="hover:text-amberGold transition-colors">Meet The Baristas</a></li>
+                    <li><a href="#events" class="hover:text-amberGold transition-colors">Workshops & Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif font-bold text-xs text-warmCopper dark:text-amberGold uppercase tracking-wider mb-4">Coffee Club</h4>
+                <p class="text-xs leading-relaxed mb-3 opacity-75">
+                    Receive cupping notes, secret barista recipe cards, and priority booking for our acoustic jazz nights.
+                </p>
+                <form onsubmit="handleNewsletter(event)" class="flex flex-col gap-2">
+                    <input type="email" placeholder="Enter your email" required class="px-3.5 py-2 rounded-lg bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/15 text-xs focus:outline-none focus:border-amberGold">
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-amberGold text-darkBg font-bold text-xs hover:opacity-90 transition-all">Join The Club</button>
+                </form>
+            </div>
+
+            <div>
+                <h4 class="font-serif font-bold text-xs text-amberGold uppercase tracking-wider mb-4">Bistro Hours</h4>
+                <p class="text-xs leading-relaxed mb-1.5 opacity-80">Mon - Fri: 7:00 AM – 7:00 PM</p>
+                <p class="text-xs leading-relaxed mb-3.5 opacity-80">Sat - Sun: 8:00 AM – 8:00 PM</p>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amberGold/20 text-warmCopper dark:text-amberGold text-[10px] font-bold">
+                    <span class="w-2 h-2 rounded-full bg-amberGold animate-ping"></span> Open Today & Welcoming
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col md:flex-row items-center justify-between text-xs opacity-60">
+            <p>&copy; 2026 The Daily Brew Artisan Bistro. All rights reserved.</p>
+            <p class="mt-2 md:mt-0">Warm service, roasted micro-lots & from-scratch provisions.</p>
+        </div>
+    </footer>
+
+    <!-- Reservation Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-lightCard dark:bg-darkCard border border-black/10 dark:border-white/20 p-8 rounded-3xl max-w-md w-full mx-4 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 opacity-60 hover:opacity-100 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <span class="text-xs font-bold text-amberGold uppercase tracking-widest block mb-2">Event Registration</span>
+            <h3 id="modal-title" class="font-serif text-2xl font-bold mb-4">Reserve Your Seat</h3>
+            <form onsubmit="handleBooking(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs opacity-75 mb-1">Your Name</label>
+                    <input type="text" required class="w-full px-4 py-2.5 rounded-xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/15 text-sm focus:outline-none focus:border-amberGold" placeholder="Sarah Connor">
+                </div>
+                <div>
+                    <label class="block text-xs opacity-75 mb-1">Email Address</label>
+                    <input type="email" required class="w-full px-4 py-2.5 rounded-xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/15 text-sm focus:outline-none focus:border-amberGold" placeholder="sarah@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs opacity-75 mb-1">Party Size</label>
+                    <select class="w-full px-4 py-2.5 rounded-xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/15 text-sm focus:outline-none focus:border-amberGold">
+                        <option>1 Seat</option>
+                        <option>2 Seats</option>
+                        <option>3 Seats</option>
+                        <option>4+ Seats</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-amberGold text-darkBg font-bold text-sm hover:opacity-90 transition-all mt-3 shadow-lg">
+                    Confirm Seat Reservation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-amberGold text-darkBg px-6 py-3 rounded-2xl font-bold text-xs shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300">
+        Action confirmed! We look forward to welcoming you.
+    </div>
+
+    <script>
+        // Light skin brown (#F5ECE0) vs Dark coffee brown (#1A110D) theme toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        const savedTheme = localStorage.getItem('dailybrew_theme') || 'light';
+        if (savedTheme === 'dark') {
+            htmlElement.classList.add('dark');
+            themeIcon.className = 'fa-solid fa-sun';
+        } else {
+            htmlElement.classList.remove('dark');
+            themeIcon.className = 'fa-solid fa-moon';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('dailybrew_theme', 'light');
+                themeIcon.className = 'fa-solid fa-moon';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('dailybrew_theme', 'dark');
+                themeIcon.className = 'fa-solid fa-sun';
+            }
+        });
+
+        // Mobile drawer navigation
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Handcrafted food & beverage menu
+        const menuData = {
+            coffee: [
+                { name: 'Cardamom Bourbon Latte', price: '$6.50', desc: 'Double espresso, steamed velvety oat milk, organic Madagascar vanilla, freshly cracked green cardamom.' },
+                { name: 'Single-Origin 18hr Cold Brew', price: '$5.50', desc: 'Slow-steeped Ethiopian Yirgacheffe notes of bergamot, dark plum, and toasted brown sugar.' },
+                { name: 'Honey Sea Salt Flat White', price: '$6.00', desc: 'Silky microfoam over double ristretto shots, raw mountain wildflower honey, fleur de sel.' },
+                { name: 'Craft Espresso Tonic', price: '$5.75', desc: 'Double espresso pulled directly over chilled artisanal quinine tonic, dehydrated blood orange wheel.' },
+                { name: 'Dark Ganache Mocha', price: '$6.80', desc: '72% Belgian single-estate chocolate melt, steamed whole farm milk, espresso, and Ceylon cinnamon.' },
+                { name: 'Cortado Tradicional', price: '$5.00', desc: 'Equal parts dense ristretto espresso and textured warm milk in a heavy fluted Gibraltar glass.' }
+            ],
+            sandwiches: [
+                { name: 'Truffle Mushroom & Gruyère Panini', price: '$13.50', desc: 'Pan-roasted cremini & shiitake mushrooms, melted aged Swiss gruyère, fresh thyme aioli on rustic toasted sourdough.' },
+                { name: 'Herb Turkey & Triple Cream Brie', price: '$14.00', desc: 'House slow-roasted turkey breast, creamy French brie, mission fig preserve, baby arugula on butter-pressed brioche.' },
+                { name: 'Slow-Smoked Brisket Melt', price: '$15.00', desc: '14-hour applewood smoked beef brisket, sharp aged cheddar, pickled shallots, whole grain mustard on seeded rye.' },
+                { name: 'Heirloom Caprese Panini', price: '$12.50', desc: 'Buffalo mozzarella, vine-ripened heirloom tomatoes, freshly pounded basil pesto, 12-year balsamic reduction.' }
+            ],
+            drinks: [
+                { name: 'Sparkling Blood Orange & Rosemary Elixir', price: '$5.75', desc: 'Hand-pressed blood orange juice, aromatic fresh rosemary reduction, and effervescent spring water.' },
+                { name: 'Iced Yuzu Jasmine Cold Brew Tea', price: '$6.25', desc: 'Fragrant spring-harvested jasmine blossoms, Japanese yuzu citrus puree, cold agave nectar.' },
+                { name: 'Ginger Peach Sparkling Shrub', price: '$5.50', desc: 'Fermented fresh Georgia peach cider, muddled ginger root, lemon peel, and sparkling mineral water.' },
+                { name: 'Ceremonial Uji Iced Matcha Latte', price: '$6.50', desc: 'Stone-ground first harvest Kyoto matcha, chilled velvety almond milk, pure agave splash.' }
+            ],
+            bakery: [
+                { name: 'Brown Butter & Cardamom Knot', price: '$5.00', desc: 'Fluffy knotted Swedish brioche dough brushed with nutty brown butter and coarse raw sugar.' },
+                { name: 'Almond Frangipane Twice-Baked Croissant', price: '$5.50', desc: 'Buttery viennoiserie soaked in vanilla syrup, stuffed with almond paste and toasted sliced almonds.' },
+                { name: 'Sea Salt Dark Chocolate Scone', price: '$4.75', desc: 'Crumbly, melt-in-your-mouth scone packed with 70% Guittard chocolate wafers and Maldon salt.' },
+                { name: 'Meyer Lemon Ricotta Tea Cake', price: '$4.50', desc: 'Moist whole-milk ricotta sponge glazed with fresh lemon zest icing and poppy seeds.' }
+            ]
+        };
+
+        function switchTab(category) {
+            document.querySelectorAll('.menu-tab').forEach(btn => {
+                btn.className = 'menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold';
+            });
+            const activeBtn = document.getElementById(`tab-${category}`);
+            if (activeBtn) {
+                activeBtn.className = 'menu-tab px-6 py-2.5 rounded-full font-semibold text-xs tracking-wider uppercase transition-all bg-amberGold text-darkBg shadow-md';
+            }
+
+            const container = document.getElementById('menu-content');
+            container.innerHTML = '';
+            menuData[category].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'p-6 rounded-2xl bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/10 hover:border-amberGold/50 transition-all flex flex-col justify-between shadow-sm';
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4 mb-2">
+                        <h4 class="font-serif font-bold text-lg">${item.name}</h4>
+                        <span class="font-serif font-bold text-amberGold text-base">${item.price}</span>
+                    </div>
+                    <p class="text-xs leading-relaxed font-light opacity-80">${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+        switchTab('coffee');
+
+        // Modal and notifications
+        function openModal(eventTitle) {
+            document.getElementById('modal-title').innerText = eventTitle;
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+        function handleBooking(e) {
+            e.preventDefault();
+            closeModal();
+            showToast("Seat reserved! A warm confirmation email has been dispatched.");
+        }
+        function handleNewsletter(e) {
+            e.preventDefault();
+            e.target.reset();
+            showToast("Welcome to The Daily Brew Club! Look out for our welcome note.");
+        }
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3600);
+        }
+    </script>
+
+    <script>
+        // Camera focus controller interface
+        let setCameraFocus = () => {};
+
+        window.addEventListener('load', () => {
+            initThreeJSCafeTrio();
+        });
+
+        // Procedural texture generators for rich visual details
+        function createWoodPlatterTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            // Rich oak wood gradient background
+            const grad = ctx.createRadialGradient(512, 512, 50, 512, 512, 512);
+            grad.addColorStop(0, '#8A5836');
+            grad.addColorStop(0.6, '#6B3E20');
+            grad.addColorStop(1, '#4A2711');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            // Concentric tree rings and wood grain striations
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 90; i++) {
+                const radius = 20 + i * 5.8;
+                ctx.beginPath();
+                ctx.arc(512 + Math.sin(i * 0.4) * 8, 512 + Math.cos(i * 0.4) * 8, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(${i % 2 === 0 ? '55,28,12' : '150,95,58'}, ${0.12 + (i % 3) * 0.05})`;
+                ctx.stroke();
+            }
+
+            // Cross grain wood pores
+            for (let j = 0; j < 3000; j++) {
+                const x = Math.random() * 1024;
+                const y = Math.random() * 1024;
+                const len = 4 + Math.random() * 8;
+                ctx.fillStyle = 'rgba(40, 20, 10, 0.18)';
+                ctx.fillRect(x, y, len, 1);
+            }
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createLatteArtTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // Rich crema base
+            const grad = ctx.createRadialGradient(256, 256, 10, 256, 256, 256);
+            grad.addColorStop(0, '#532D1A');
+            grad.addColorStop(0.85, '#381C0E');
+            grad.addColorStop(1, '#241006');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 512, 512);
+
+            // Textured velvet foam rosetta pattern
+            ctx.fillStyle = '#F5E6D3';
+            ctx.shadowColor = 'rgba(70, 35, 15, 0.4)';
+            ctx.shadowBlur = 12;
+
+            // Heart / rosetta leaves
+            for (let layer = 0; layer < 6; layer++) {
+                const y = 340 - layer * 34;
+                const size = 68 - layer * 7;
+                ctx.beginPath();
+                ctx.arc(256 - size * 0.5, y, size * 0.5, 0, Math.PI * 2);
+                ctx.arc(256 + size * 0.5, y, size * 0.5, 0, Math.PI * 2);
+                ctx.lineTo(256, y + size * 0.9);
+                ctx.fill();
+            }
+            // Central stem draw-through line
+            ctx.strokeStyle = '#532D1A';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(256, 90);
+            ctx.lineTo(256, 400);
+            ctx.stroke();
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createToastedBreadTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // Golden crust base
+            ctx.fillStyle = '#E8BD82';
+            ctx.fillRect(0, 0, 512, 512);
+
+            // Sourdough flour speckles and bread crumb air bubbles
+            for (let i = 0; i < 1800; i++) {
+                const x = Math.random() * 512;
+                const y = Math.random() * 512;
+                const r = Math.random() * 3.5;
+                ctx.fillStyle = Math.random() > 0.4 ? 'rgba(180, 120, 60, 0.28)' : 'rgba(255, 245, 230, 0.35)';
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Dark caramelized panini grill marks
+            ctx.lineWidth = 18;
+            ctx.strokeStyle = 'rgba(92, 45, 18, 0.85)';
+            ctx.lineCap = 'round';
+            for (let g = 0; g < 4; g++) {
+                const yPos = 80 + g * 110;
+                ctx.beginPath();
+                ctx.moveTo(40, yPos);
+                ctx.bezierCurveTo(180, yPos - 6, 320, yPos + 6, 472, yPos);
+                ctx.stroke();
+            }
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createMugEmblemTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            // Elegant dark roasted crest plate
+            ctx.fillStyle = '#221510';
+            ctx.fillRect(0, 0, 512, 256);
+
+            ctx.strokeStyle = '#C98D53';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(16, 16, 480, 224);
+
+            ctx.fillStyle = '#F5ECE0';
+            ctx.font = 'bold 36px "Playfair Display", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('THE DAILY BREW', 256, 105);
+
+            ctx.fillStyle = '#C98D53';
+            ctx.font = '600 18px Inter, sans-serif';
+            ctx.fillText('ARTISAN ROASTERY & BISTRO', 256, 155);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function initThreeJSCafeTrio() {
+            const container = document.getElementById('trio-canvas-container');
+            const loader = document.getElementById('trio-canvas-loader');
+            const tooltipTitle = document.getElementById('tooltip-title');
+            const tooltipSub = document.getElementById('tooltip-sub');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+            
+            let targetCamPos = new THREE.Vector3(0, 3.2, 7.5);
+            let targetLookAt = new THREE.Vector3(0, 0.4, 0);
+            let currentLookAt = new THREE.Vector3(0, 0.4, 0);
+            camera.position.copy(targetCamPos);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Lighting: Warm cafe bistro mood
+            const ambientLight = new THREE.AmbientLight(0xfff5e6, 1.45);
+            scene.add(ambientLight);
+
+            const warmSpot = new THREE.DirectionalLight(0xffe6c2, 2.4);
+            warmSpot.position.set(6, 11, 7);
+            warmSpot.castShadow = true;
+            warmSpot.shadow.mapSize.width = 1024;
+            warmSpot.shadow.mapSize.height = 1024;
+            scene.add(warmSpot);
+
+            const softFill = new THREE.DirectionalLight(0xd7c4b0, 0.85);
+            softFill.position.set(-6, 5, -3);
+            scene.add(softFill);
+
+            // Platter group
+            const showcaseGroup = new THREE.Group();
+            scene.add(showcaseGroup);
+
+            // 1. Artisan Wood Serving Board with procedural wood grain texture
+            const woodTexture = createWoodPlatterTexture();
+            const boardGeo = new THREE.CylinderGeometry(3.6, 3.6, 0.24, 64);
+            const boardMat = new THREE.MeshStandardMaterial({
+                map: woodTexture,
+                roughness: 0.65,
+                metalness: 0.04
+            });
+            const boardMesh = new THREE.Mesh(boardGeo, boardMat);
+            boardMesh.position.y = -0.12;
+            boardMesh.receiveShadow = true;
+            showcaseGroup.add(boardMesh);
+
+            // Inner dark slate coaster inlay
+            const slateGeo = new THREE.CylinderGeometry(3.3, 3.3, 0.04, 64);
+            const slateMat = new THREE.MeshStandardMaterial({
+                color: 0x2A1C16,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const slateMesh = new THREE.Mesh(slateGeo, slateMat);
+            slateMesh.position.y = 0.02;
+            slateMesh.receiveShadow = true;
+            showcaseGroup.add(slateMesh);
+
+            // 2. SIGNATURE CERAMIC COFFEE MUG
+            const mugGroup = new THREE.Group();
+            // Reposition mug further back along the platter (-Z and -X) for ample clearance from the sandwich
+            mugGroup.position.set(-1.65, 0.05, -0.45);
+
+            const ceramicMat = new THREE.MeshStandardMaterial({
+                color: 0xF7EFE7,
+                roughness: 0.22,
+                metalness: 0.06
+            });
+
+            // Fluted mug body
+            const mugBodyGeo = new THREE.CylinderGeometry(0.86, 0.72, 1.7, 40);
+            const mugBody = new THREE.Mesh(mugBodyGeo, ceramicMat);
+            mugBody.position.y = 0.85;
+            mugBody.castShadow = true;
+            mugBody.receiveShadow = true;
+            mugGroup.add(mugBody);
+
+            // Latte surface with procedural latte art
+            const latteArtTexture = createLatteArtTexture();
+            const coffeeLiquidGeo = new THREE.CylinderGeometry(0.82, 0.82, 0.06, 40);
+            const coffeeMat = new THREE.MeshStandardMaterial({
+                map: latteArtTexture,
+                roughness: 0.3
+            });
+            const coffeeLiquid = new THREE.Mesh(coffeeLiquidGeo, coffeeMat);
+            coffeeLiquid.position.y = 1.64;
+            mugGroup.add(coffeeLiquid);
+
+            // Curved Ceramic Handle with clean clearance
+            const handleGeo = new THREE.TorusGeometry(0.48, 0.1, 16, 36, Math.PI * 1.15);
+            const handleMesh = new THREE.Mesh(handleGeo, ceramicMat);
+            handleMesh.rotation.z = -Math.PI / 2.05;
+            handleMesh.position.set(0.74, 0.88, 0);
+            handleMesh.castShadow = true;
+            handleMesh.receiveShadow = true;
+            mugGroup.add(handleMesh);
+
+            // Embossed Logo Emblem
+            const emblemTex = createMugEmblemTexture();
+            const emblemGeo = new THREE.PlaneGeometry(1.05, 0.55);
+            const emblemMat = new THREE.MeshStandardMaterial({
+                map: emblemTex,
+                roughness: 0.38,
+                side: THREE.DoubleSide
+            });
+            const emblemMesh = new THREE.Mesh(emblemGeo, emblemMat);
+            emblemMesh.position.set(0, 0.85, 0.88);
+            mugGroup.add(emblemMesh);
+
+            // Rising Steam Particles
+            const steamCount = 30;
+            const steamGeo = new THREE.BufferGeometry();
+            const steamPositions = new Float32Array(steamCount * 3);
+            for (let i = 0; i < steamCount; i++) {
+                steamPositions[i * 3 + 0] = (Math.random() - 0.5) * 0.4;
+                steamPositions[i * 3 + 1] = 1.7 + Math.random() * 1.6;
+                steamPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
+            }
+            steamGeo.setAttribute('position', new THREE.BufferAttribute(steamPositions, 3));
+            const steamMat = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.14,
+                transparent: true,
+                opacity: 0.4
+            });
+            const steamPoints = new THREE.Points(steamGeo, steamMat);
+            mugGroup.add(steamPoints);
+
+            showcaseGroup.add(mugGroup);
+
+            // 3. ARTISAN GOURMET TOASTED PANINI
+            const sandwichGroup = new THREE.Group();
+            sandwichGroup.position.set(0.1, 0.05, 0.7);
+
+            const toastTexture = createToastedBreadTexture();
+            const breadMat = new THREE.MeshStandardMaterial({
+                map: toastTexture,
+                roughness: 0.72
+            });
+
+            // Bottom Bread Slice
+            const bottomBreadGeo = new THREE.BoxGeometry(1.65, 0.22, 1.25);
+            const bottomBread = new THREE.Mesh(bottomBreadGeo, breadMat);
+            bottomBread.position.y = 0.11;
+            bottomBread.castShadow = true;
+            bottomBread.receiveShadow = true;
+            sandwichGroup.add(bottomBread);
+
+            // Melted Sharp Cheddar & Gruyère layer (Golden yellow cheese drip)
+            const cheeseGeo = new THREE.BoxGeometry(1.72, 0.08, 1.3);
+            const cheeseMat = new THREE.MeshStandardMaterial({
+                color: 0xF5A823,
+                roughness: 0.35,
+                metalness: 0.05
+            });
+            const cheese = new THREE.Mesh(cheeseGeo, cheeseMat);
+            cheese.position.y = 0.25;
+            cheese.rotation.y = 0.05;
+            sandwichGroup.add(cheese);
+
+            // Crisp Ruffled Greens layer
+            const greensGeo = new THREE.BoxGeometry(1.76, 0.07, 1.35);
+            const greensMat = new THREE.MeshStandardMaterial({
+                color: 0x5C7B38,
+                roughness: 0.65
+            });
+            const greens = new THREE.Mesh(greensGeo, greensMat);
+            greens.position.y = 0.32;
+            greens.rotation.y = -0.06;
+            sandwichGroup.add(greens);
+
+            // Sliced Heirloom Tomatoes
+            const tomatoMat = new THREE.MeshStandardMaterial({ color: 0xB82F1E, roughness: 0.35 });
+            const tomatoGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.1, 16);
+            
+            const tomato1 = new THREE.Mesh(tomatoGeo, tomatoMat);
+            tomato1.position.set(-0.35, 0.41, -0.15);
+            sandwichGroup.add(tomato1);
+
+            const tomato2 = new THREE.Mesh(tomatoGeo, tomatoMat);
+            tomato2.position.set(0.35, 0.41, 0.15);
+            sandwichGroup.add(tomato2);
+
+            // Top Grilled Sourdough Slice
+            const topBreadGeo = new THREE.BoxGeometry(1.65, 0.22, 1.25);
+            const topBread = new THREE.Mesh(topBreadGeo, breadMat);
+            topBread.position.set(0, 0.56, 0);
+            topBread.rotation.set(0.04, 0.02, -0.03);
+            topBread.castShadow = true;
+            sandwichGroup.add(topBread);
+
+            // Bamboo Pick Skewer with Pitted Green Olive Garnish
+            const pickGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.95, 8);
+            const pickMat = new THREE.MeshStandardMaterial({ color: 0xD7B88A, roughness: 0.8 });
+            const pick = new THREE.Mesh(pickGeo, pickMat);
+            pick.position.set(0.2, 0.92, 0.1);
+            sandwichGroup.add(pick);
+
+            const oliveGeo = new THREE.SphereGeometry(0.13, 16, 16);
+            const oliveMat = new THREE.MeshStandardMaterial({ color: 0x4E5D28, roughness: 0.4 });
+            const olive = new THREE.Mesh(oliveGeo, oliveMat);
+            olive.position.set(0.2, 1.08, 0.1);
+            sandwichGroup.add(olive);
+
+            showcaseGroup.add(sandwichGroup);
+
+            // 4. CRAFT COLD REFRESHER GLASS
+            const drinkGroup = new THREE.Group();
+            drinkGroup.position.set(1.5, 0.05, -0.4);
+
+            // Translucent Ribbed Glass
+            const glassMat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.35,
+                roughness: 0.08,
+                transmission: 0.88,
+                ior: 1.5,
+                thickness: 0.25
+            });
+
+            const glassGeo = new THREE.CylinderGeometry(0.7, 0.54, 2.25, 36, 1, true);
+            const glassMesh = new THREE.Mesh(glassGeo, glassMat);
+            glassMesh.position.y = 1.12;
+            glassMesh.castShadow = true;
+            drinkGroup.add(glassMesh);
+
+            const glassBaseGeo = new THREE.CylinderGeometry(0.54, 0.54, 0.16, 36);
+            const glassBase = new THREE.Mesh(glassBaseGeo, glassMat);
+            glassBase.position.y = 0.08;
+            drinkGroup.add(glassBase);
+
+            // Sparkling Blood Orange / Brewed Tea Liquid
+            const liquidGeo = new THREE.CylinderGeometry(0.66, 0.52, 1.85, 36);
+            const liquidMat = new THREE.MeshStandardMaterial({
+                color: 0xC8522A,
+                transparent: true,
+                opacity: 0.88,
+                roughness: 0.18
+            });
+            const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat);
+            liquidMesh.position.y = 1.02;
+            drinkGroup.add(liquidMesh);
+
+            // Refractive Ice Cubes
+            const iceMat = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.65,
+                roughness: 0.1
+            });
+            const iceGeo = new THREE.BoxGeometry(0.29, 0.29, 0.29);
+            
+            const ice1 = new THREE.Mesh(iceGeo, iceMat);
+            ice1.position.set(-0.15, 1.45, 0.1);
+            ice1.rotation.set(0.3, 0.5, 0.2);
+            drinkGroup.add(ice1);
+
+            const ice2 = new THREE.Mesh(iceGeo, iceMat);
+            ice2.position.set(0.18, 1.55, -0.1);
+            ice2.rotation.set(0.6, 0.2, 0.7);
+            drinkGroup.add(ice2);
+
+            const ice3 = new THREE.Mesh(iceGeo, iceMat);
+            ice3.position.set(0.04, 1.18, 0.2);
+            ice3.rotation.set(0.1, 0.8, 0.4);
+            drinkGroup.add(ice3);
+
+            // Blood Orange Citrus Wheel Garnish
+            const citrusGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.04, 24);
+            const citrusMat = new THREE.MeshStandardMaterial({ color: 0xE87034, roughness: 0.4 });
+            const citrusWheel = new THREE.Mesh(citrusGeo, citrusMat);
+            citrusWheel.position.set(0.56, 2.15, 0);
+            citrusWheel.rotation.set(Math.PI / 4, 0, Math.PI / 3);
+            drinkGroup.add(citrusWheel);
+
+            // Striped Paper Straw
+            const strawGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.75, 16);
+            const strawMat = new THREE.MeshStandardMaterial({ color: 0xC98D53, roughness: 0.5 });
+            const straw = new THREE.Mesh(strawGeo, strawMat);
+            straw.position.set(-0.2, 1.65, 0.1);
+            straw.rotation.set(0.15, 0, 0.25);
+            drinkGroup.add(straw);
+
+            showcaseGroup.add(drinkGroup);
+
+            // Remove initial loading indicator
+            if (loader) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 450);
+                }, 400);
+            }
+
+            // Focus target cameras
+            const cameraPositions = {
+                all: {
+                    pos: new THREE.Vector3(0, 3.2, 7.5),
+                    look: new THREE.Vector3(0, 0.4, 0),
+                    title: 'The Daily Brew Trio Platter',
+                    sub: 'Hand-poured ceramic mug, artisan sourdough panini, and cold craft refresher.'
+                },
+                mug: {
+                    pos: new THREE.Vector3(-1.85, 2.0, 3.2),
+                    look: new THREE.Vector3(-1.65, 1.1, -0.45),
+                    title: 'Signature Ceramic Mug',
+                    sub: 'Embossed cafe crest, velvet rosetta latte art & rising hot steam.'
+                },
+                sandwich: {
+                    pos: new THREE.Vector3(0.1, 2.2, 3.5),
+                    look: new THREE.Vector3(0.1, 0.5, 0.7),
+                    title: 'Grilled Artisan Sourdough Panini',
+                    sub: 'Crispy caramelized grill crust, melted aged cheeses & skewered olive.'
+                },
+                drink: {
+                    pos: new THREE.Vector3(1.7, 2.3, 3.6),
+                    look: new THREE.Vector3(1.5, 1.1, -0.4),
+                    title: 'Craft Cold Refresher',
+                    sub: 'Chilled iced blood-orange brew, floating ice cubes & striped paper straw.'
+                }
+            };
+
+            setCameraFocus = (itemKey) => {
+                const target = cameraPositions[itemKey] || cameraPositions.all;
+                targetCamPos.copy(target.pos);
+                targetLookAt.copy(target.look);
+
+                if (tooltipTitle) tooltipTitle.innerText = target.title;
+                if (tooltipSub) tooltipSub.innerText = target.sub;
+
+                document.querySelectorAll('.focus-pill').forEach(btn => {
+                    btn.className = 'focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-lightBg dark:bg-darkBg border border-black/10 dark:border-white/20 hover:border-amberGold transition-all';
+                });
+                const activeBtn = document.getElementById(`btn-focus-${itemKey}`);
+                if (activeBtn) {
+                    activeBtn.className = 'focus-pill px-4 py-2 rounded-full text-xs font-semibold bg-amberGold text-darkBg shadow-md transition-all';
+                }
+            };
+
+            // Drag and scroll orbit interactions
+            let isDragging = false;
+            let prevMouseX = 0;
+            let userRotationY = 0;
+            let scrollRotationY = 0;
+
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                prevMouseX = e.clientX;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - prevMouseX;
+                userRotationY += deltaX * 0.008;
+                prevMouseX = e.clientX;
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // Touch support
+            container.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    prevMouseX = e.touches[0].clientX;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length === 0) return;
+                const deltaX = e.touches[0].clientX - prevMouseX;
+                userRotationY += deltaX * 0.008;
+                prevMouseX = e.touches[0].clientX;
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Scroll-linked rotation
+            window.addEventListener('scroll', () => {
+                const rect = container.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+                    scrollRotationY = (scrollProgress - 0.5) * Math.PI * 1.5;
+                }
+            });
+
+            // Responsive resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            // Render loop
+            const clock = new THREE.Clock();
+            function animate() {
+                requestAnimationFrame(animate);
+                const elapsed = clock.getElapsedTime();
+
+                // Smooth camera motion
+                camera.position.lerp(targetCamPos, 0.04);
+                currentLookAt.lerp(targetLookAt, 0.04);
+                camera.lookAt(currentLookAt);
+
+                // Smooth rotation interpolation
+                const goalRotation = scrollRotationY + userRotationY;
+                showcaseGroup.rotation.y += (goalRotation - showcaseGroup.rotation.y) * 0.06;
+
+                // Gentle floating breath
+                showcaseGroup.position.y = Math.sin(elapsed * 1.6) * 0.035;
+
+                // Animate rising steam
+                const steamPos = steamGeo.attributes.position.array;
+                for (let i = 0; i < steamCount; i++) {
+                    steamPos[i * 3 + 1] += 0.012;
+                    steamPos[i * 3 + 0] += Math.sin(elapsed * 3 + i) * 0.002;
+                    if (steamPos[i * 3 + 1] > 3.3) {
+                        steamPos[i * 3 + 1] = 1.7;
+                        steamPos[i * 3 + 0] = (Math.random() - 0.5) * 0.35;
+                    }
+                }
+                steamGeo.attributes.position.needsUpdate = true;
+
+                // Bobbing ice cubes
+                ice1.position.y = 1.45 + Math.sin(elapsed * 2.5) * 0.02;
+                ice2.position.y = 1.55 + Math.cos(elapsed * 2.2) * 0.02;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
