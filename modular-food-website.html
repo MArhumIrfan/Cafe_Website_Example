@@ -20,6 +20,8 @@ section{scroll-margin-top:5rem}
 .chip{padding:.5rem 1rem;border-radius:9999px;font-size:.75rem;font-weight:600;border:1px solid rgb(var(--ink)/.2);background:rgb(var(--bg));transition:.2s}
 .chip:hover{border-color:rgb(var(--a1))}.chip.on{background:rgb(var(--a1));color:rgb(var(--on));border-color:transparent}
 #stage{touch-action:pan-y}
+.edit-mode [data-cp]:hover{outline:2px dashed rgb(var(--a1));outline-offset:3px;cursor:text}
+[contenteditable=true]{outline:2px solid rgb(var(--a1))!important;outline-offset:3px;cursor:text}
 </style>
 </head>
 <body class="bg-bg text-ink antialiased">
@@ -43,7 +45,7 @@ const CAFE = {
   cta:{label:'Order Pick-up',href:'#menu'}},
  theme:{mode:'light',accent:'#C98D53',accent2:'#B46A36',lightBg:'#F5ECE0',darkBg:'#1A110D',fontHead:'Playfair Display',fontBody:'Inter'},
  sections:[{id:'hero',on:true},{id:'model3d',on:true,nav:'3D Platter'},{id:'about',on:true,nav:'Our Story'},{id:'menu',on:true,nav:'Menu'},
-  {id:'team',on:true,nav:'Our Team'},{id:'reviews',on:true,nav:'Reviews'},{id:'gallery',on:true,nav:'Gallery'},{id:'events',on:true,nav:'Events'},{id:'location',on:true,nav:'Visit Us'}],
+  {id:'team',on:true,nav:'Our Team'},{id:'reviews',on:true,nav:'Reviews'},{id:'gallery',on:true,nav:'Gallery'},{id:'video',on:true},{id:'events',on:true,nav:'Events'},{id:'faq',on:true},{id:'contact',on:true},{id:'location',on:true,nav:'Visit Us'}],
  hero:{badge:'Warm Welcomes & Handcrafted Fare',badgeIcon:'fa-solid fa-heart',title:'Pouring Warmth, Crafting',accent:'Every Bite.',
   text:'Welcome to your neighborhood haven. Award-winning roasters greet you by name, sourdough paninis are grilled to golden perfection, and every cold drink is made with care.',
   primary:{label:'Explore 3D Platter',href:'#model3d'},secondary:{label:'View Menu',href:'#menu'},
@@ -95,12 +97,22 @@ const CAFE = {
   {tag:'Masterclass',date:'Oct 21, 10:30 AM',title:'Latte Art & Microfoam',text:'Learn milk texturing, espresso dial-in and how to pour hearts and rosettas.',note:'5 Spots Open'},
   {tag:'Tasting',date:'Oct 28, 5:00 PM',title:'Micro-Lot Tasting Flights',text:'Six rare single-origin coffees with fresh pastry pairings.',note:'8 Spots Open'}]},
  location:{kicker:'Visit Us',title:'Come Say Hello',text:'Unhurried brunch, a brisk flat white, or a work session on fast Wi-Fi: you will be greeted like family.',
-  address:'428 Roasters Way, Artisan Quarter, New York, NY 10012',hours:[['Mon – Fri','7:00 AM – 7:00 PM'],['Sat – Sun','8:00 AM – 8:00 PM']],extra:'Gigabit Guest Wi-Fi',extraIcon:'fa-solid fa-wifi'},
+  address:'428 Roasters Way, Artisan Quarter, New York, NY 10012',lat:40.7295,lon:-73.9965,hours:[['Mon – Fri','7:00 AM – 7:00 PM'],['Sat – Sun','8:00 AM – 8:00 PM']],extra:'Gigabit Guest Wi-Fi',extraIcon:'fa-solid fa-wifi'},
  footer:{about:'An artisan bistro and specialty roastery committed to genuine hospitality and from-scratch food.',status:'Open Today & Welcoming',
   newsletter:{on:true,title:'Coffee Club',text:'Get cupping notes, recipe cards and priority booking.',button:'Join The Club',thanks:'Welcome to the club!'}},
  ui:{fullBoard:'Full Board',address:'Address',hours:'Opening Hours',follow:'Follow',map:'Open In Maps',links:'Quick Links',footHours:'Hours',rights:'All rights reserved.',namePh:'Your name',emailPh:'Email address',confirm:'Confirm Reservation',booked:'Reserved! A confirmation email is on its way.'},
  custom:{kicker:'',title:'',html:'<p class="text-center opacity-80">Your custom HTML goes here. Add a section with id "custom" to show it.</p>'},
- customCss:''
+ customCss:'',
+ seo:{description:'',image:'',type:'Restaurant'},
+ video:{kicker:'Watch & See',title:'Life Behind The Counter',text:'A look inside our kitchen and bar. Swap these for your own: upload a file or paste a YouTube, Vimeo or .mp4 link.',columns:2,videos:[
+  {title:'Behind The Bar',caption:'Where every cup begins.',frame:'cinema',titlePos:'below',source:'auto',url:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',altUrl:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',poster:'',autoplay:false,loop:false,muted:false,controls:true},
+  {title:'Fresh From The Kitchen',caption:'Sample clip: replace with your own.',frame:'polaroid',titlePos:'below',source:'auto',url:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',altUrl:'',poster:'',autoplay:false,loop:true,muted:true,controls:true}]},
+ faq:{kicker:'Good To Know',title:'Questions & Answers',text:'',items:[
+  {q:'Do you take reservations?',a:'Walk-ins are always welcome. Larger groups can reserve by email or phone.'},
+  {q:'Do you have vegan and gluten-free options?',a:'Yes. Ask our team and we will happily guide you; most dishes can be adapted.'},
+  {q:'Is there Wi-Fi, and are laptops welcome?',a:'Free fast Wi-Fi, and laptops are welcome all day.'}]},
+ contact:{kicker:'Get In Touch',title:'Send Us A Message',text:'Catering, events or just a hello. We reply within a day.',email:'hello@example.com',endpoint:'',subject:'Website enquiry',button:'Send Message',thanks:'Opening your email app…',fields:[
+  {label:'Your name',key:'name',type:'text',required:true},{label:'Email',key:'email',type:'email',required:true},{label:'Message',key:'message',type:'textarea',required:true}]}
 };
 
 /* Second preset: only what differs from CAFE is listed (merge fills the rest). Events are switched OFF here. */
@@ -108,7 +120,7 @@ const RESTAURANT = merge(CAFE,{
  brand:{name:"Nonna Rosa's",tagline:'Italian Trattoria',icon:'fa-solid fa-pizza-slice',handle:'@nonnarosas',cta:{label:'Book a Table',href:'#location'}},
  theme:{accent:'#D1432E',accent2:'#9C2B1B',lightBg:'#FBF3E8',darkBg:'#17100E',fontHead:'Cormorant Garamond'},
  sections:[{id:'hero',on:true},{id:'model3d',on:true,nav:'3D Table'},{id:'about',on:true,nav:'Our Story'},{id:'menu',on:true,nav:'Menu'},{id:'team',on:true,nav:'Chefs'},
-  {id:'reviews',on:true,nav:'Reviews'},{id:'gallery',on:true,nav:'Gallery'},{id:'events',on:false,nav:'Events'},{id:'location',on:true,nav:'Reservations'}],
+  {id:'reviews',on:true,nav:'Reviews'},{id:'gallery',on:true,nav:'Gallery'},{id:'video',on:true},{id:'events',on:false,nav:'Events'},{id:'faq',on:true},{id:'contact',on:true},{id:'location',on:true,nav:'Reservations'}],
  hero:{badge:'Family Recipes Since 1987',badgeIcon:'fa-solid fa-pizza-slice',title:'Real Italian,',accent:'Made With Love.',
   text:'Wood-fired pizza, hand-rolled pasta and recipes passed down from Nonna Rosa herself.',primary:{label:'See the 3D Table',href:'#model3d'},secondary:{label:'View Menu',href:'#menu'},
   stats:[{v:'36 hrs',l:'Dough Rested'},{v:'★ 4.8',l:'Guest Rating'},{v:'Wood-Fired',l:'Oven'}],
@@ -127,7 +139,12 @@ const RESTAURANT = merge(CAFE,{
   {name:'Luca Bellini',role:'Pizzaiolo',quote:'"The dough tells you when it is ready. You only have to listen."',meta:'Wood-Fire Master',img:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'}]},
  reviews:{count:'Over 900 Reviews',rating:'4.8/5',items:[{text:'The best pizza outside Naples. The crust is perfect and the staff treat you like family.',author:'James T.',stars:5},{text:'Handmade tagliatelle that I still dream about. Book ahead on weekends!',author:'Elena M.',stars:5}]},
  gallery:{title:'Inside The Trattoria',items:[{img:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000',label:'The Dining Room'},{img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',label:'Wood-Fired Pizza'},{img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=600',label:'Plated Pasta'}]},
- location:{kicker:'Reservations',title:'Join Us For Dinner',text:'Walk-ins welcome, but we recommend booking for weekends.',address:'12 Via Roma, Little Italy, New York, NY 10013',hours:[['Tue – Thu','5:00 PM – 10:00 PM'],['Fri – Sun','12:00 PM – 11:00 PM']],extra:'Private dining available',extraIcon:'fa-solid fa-champagne-glasses'},
+ location:{kicker:'Reservations',title:'Join Us For Dinner',text:'Walk-ins welcome, but we recommend booking for weekends.',address:'12 Via Roma, Little Italy, New York, NY 10013',lat:40.7195,lon:-73.9973,hours:[['Tue – Thu','5:00 PM – 10:00 PM'],['Fri – Sun','12:00 PM – 11:00 PM']],extra:'Private dining available',extraIcon:'fa-solid fa-champagne-glasses'},
+ video:{title:'Our Kitchen In Motion',text:'Watch the oven, the dough and the people behind your dinner.',videos:[
+  {title:'The Wood-Fired Oven',caption:'',frame:'tv',titlePos:'above',source:'auto',url:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',altUrl:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',poster:'',autoplay:false,loop:false,muted:false,controls:true},
+  {title:'Hand-Rolled Pasta',caption:'Made fresh every morning.',frame:'neon',titlePos:'below',source:'auto',url:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',altUrl:'',poster:'',autoplay:false,loop:true,muted:true,controls:true}]},
+ faq:{items:[{q:'Do I need to book?',a:'We recommend booking for Friday to Sunday evenings. Walk-ins are welcome when tables are free.'},{q:'Do you cater for allergies?',a:'Always. Tell us when you book and our chefs will plan around it.'},{q:'Can I host a private event?',a:'Yes, our back room seats up to 24 guests. Send us a message below.'}]},
+ contact:{title:'Questions Or Private Events?',text:'Tell us what you have in mind and we will get back to you.'},
  footer:{about:'Family-run Italian trattoria serving wood-fired pizza and hand-made pasta.',newsletter:{title:'Newsletter',text:'Seasonal menus and tasting-night invites.',button:'Subscribe'}}
 });
 const PRESETS = {cafe:CAFE, restaurant:RESTAURANT};
@@ -141,7 +158,9 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 const FB='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="100%" height="100%" fill="#cfc4b8"/></svg>');
-const img=(s,c,a='')=>`<img src="${esc(s)}" alt="${esc(a)}" loading="lazy" class="${c}" onerror="this.onerror=null;this.src='${FB}'">`;
+const url=u=>/^\s*(javascript|vbscript|data):/i.test(String(u||''))?'#':u;
+const iurl=u=>/^\s*(javascript|vbscript):/i.test(String(u||''))||(/^\s*data:/i.test(String(u||''))&&!/^\s*data:image\//i.test(String(u||'')))?FB:u;
+const img=(s,c,a='')=>`<img src="${esc(iurl(s))}" alt="${esc(a)}" loading="lazy" class="${c}" onerror="this.onerror=null;this.src='${FB}'">`;
 const rgb=h=>{h=String(h).replace('#','');if(h.length===3)h=[...h].map(c=>c+c).join('');const n=parseInt(h,16)||0;return[n>>16&255,n>>8&255,n&255]};
 const mix=(a,b,t)=>{const x=rgb(a),y=rgb(b);return x.map((v,i)=>Math.round(v+(y[i]-v)*t))};
 const onCol=h=>{const[r,g,b]=rgb(h);return .299*r+.587*g+.114*b>150?[26,26,26]:[255,255,255]};
@@ -150,7 +169,7 @@ const loadJS=u=>loaded[u]||(loaded[u]=new Promise((ok,no)=>{const s=document.cre
 const fontsDone={};
 function loadFont(n){if(fontsDone[n])return;fontsDone[n]=1;const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(n).replace(/%20/g,'+')+':ital,wght@0,400;0,600;0,700;1,400&display=swap';document.head.appendChild(l)}
 
-let cfg=(typeof EXPORTED_CFG!=='undefined')?EXPORTED_CFG:clone(PRESETS[DEFAULT_PRESET]),presetKey=DEFAULT_PRESET,menuTab=0;
+let cfg=(typeof EXPORTED_CFG!=='undefined')?EXPORTED_CFG:clone(PRESETS[DEFAULT_PRESET]),presetKey=DEFAULT_PRESET,menuTab=0,editMode=false,vals=[];
 
 function applyTheme(){
  const t=cfg.theme,v=c=>c.join(' '),L=t.lightBg,D=t.darkBg;
@@ -161,15 +180,41 @@ html.dark{--bg:${v(rgb(D))};--card:${v(mix(D,'#ffffff',.06))};--ink:${v(mix(D,'#
 }
 const isOn=id=>cfg.sections.some(s=>s.id===id&&s.on&&SECTIONS[id]);
 const hasTarget=h=>!h||h[0]!=='#'||h.length===1||isOn(h.slice(1));
-const btn=(b,primary,x='')=>(!b||!b.label||!hasTarget(b.href))?'':`<a href="${esc(b.href)}" class="px-7 py-3.5 rounded-full font-bold text-sm transition-all ${primary?'bg-a1 text-on shadow-xl shadow-a1/20 hover:opacity-90':'bg-card border border-ink/20 hover:border-a1'} ${x}">${esc(b.label)}</a>`;
+const btn=(b,primary,x='')=>(!b||!b.label||!hasTarget(b.href))?'':`<a href="${esc(url(b.href))}" class="px-7 py-3.5 rounded-full font-bold text-sm transition-all ${primary?'bg-a1 text-on shadow-xl shadow-a1/20 hover:opacity-90':'bg-card border border-ink/20 hover:border-a1'} ${x}">${esc(b.label)}</a>`;
 const head=(k,t,p)=>`<div class="text-center max-w-2xl mx-auto mb-14"><span class="text-a2 dark:text-a1 text-xs font-bold tracking-widest uppercase mb-3 block">${esc(k)}</span><h2 class="text-3xl md:text-5xl font-bold mb-4">${esc(t)}</h2>${p?`<p class="text-sm md:text-base opacity-80">${esc(p)}</p>`:''}</div>`;
 const stars=n=>'<i class="fa-solid fa-star"></i>'.repeat(Math.max(0,Math.min(5,n|0)));
 const mapUrl=a=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a);
+const mapEmbed=(l,U)=>{const la=+l.lat,lo=+l.lon;if(!la&&!lo)return'';const d=.006;return`<iframe title="Map" loading="lazy" class="w-full h-[330px] rounded-2xl border border-ink/10" src="https://www.openstreetmap.org/export/embed.html?bbox=${lo-d}%2C${la-d}%2C${lo+d}%2C${la+d}&layer=mapnik&marker=${la}%2C${lo}"></iframe><div class="text-center mt-3"><a href="${mapUrl(l.address)}" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-a2 dark:text-a1 hover:underline"><i class="fa-solid fa-diamond-turn-right mr-1.5"></i>${esc(U.map||'Open In Maps')}</a></div>`};
 
 /* ============================================================
    3. SECTION BLOCKS — each returns HTML from the config.
    To add a brand-new section: add a function here + an entry in cfg.sections.
    ============================================================ */
+const vurl=u=>!u||/^\s*(javascript|vbscript):/i.test(u)||(/^\s*data:/i.test(u)&&!/^\s*data:video\//i.test(u))?'':u;
+const vmime=u=>{const m=/^data:(video\/[\w.+-]+)/i.exec(u);if(m)return m[1];const e=((u.split(/[?#]/)[0].match(/\.(\w+)$/))||[])[1];return({mp4:'video/mp4',m4v:'video/mp4',webm:'video/webm',ogv:'video/ogg',ogg:'video/ogg',mov:'video/quicktime'})[String(e).toLowerCase()]||''};
+function videoEl(v){
+ const u=String(v.url||'').trim(),a=!!v.autoplay,lp=!!v.loop,ctl=v.controls!==false,src=v.source||'auto',box='w-full aspect-video bg-black',
+ yt=u.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/),vm=u.match(/vimeo\.com\/(?:video\/)?(\d+)/),
+ emb=s=>`<iframe class="${box}" src="${esc(s)}" title="${esc(v.title||'Video')}" loading="lazy" allowfullscreen allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+ if((src==='youtube'||src==='auto')&&yt){const q=[a?'autoplay=1&mute=1':'',lp?'loop=1&playlist='+yt[1]:'',ctl?'':'controls=0','rel=0'].filter(Boolean).join('&');return emb('https://www.youtube-nocookie.com/embed/'+yt[1]+'?'+q)}
+ if((src==='vimeo'||src==='auto')&&vm){const q=[a?'autoplay=1&muted=1':'',lp?'loop=1':'',ctl?'':'controls=0'].filter(Boolean).join('&');return emb('https://player.vimeo.com/video/'+vm[1]+(q?'?'+q:''))}
+ const s1=vurl(u),s2=vurl(String(v.altUrl||'').trim());
+ if(!s1&&!s2)return`<div class="${box} flex items-center justify-center text-white/60 text-sm"><i class="fa-solid fa-film mr-2"></i>Add a video link or upload a file</div>`;
+ return`<video class="${box}" ${ctl?'controls':''} ${a?'autoplay':''} ${(a||v.muted)?'muted':''} ${lp?'loop':''} playsinline preload="metadata" ${v.poster?`poster="${esc(iurl(v.poster))}"`:''}>${[s1,s2].filter(Boolean).map(s=>`<source src="${esc(s)}"${vmime(s)?` type="${vmime(s)}"`:''}>`).join('')}Your browser cannot play this video.</video>`}
+const FRAMES={
+ plain:v=>`<div class="rounded-xl overflow-hidden shadow-xl">${v}</div>`,
+ rounded:v=>`<div class="rounded-3xl overflow-hidden border-4 border-a1 shadow-2xl">${v}</div>`,
+ cinema:v=>`<div class="bg-black rounded-md shadow-2xl" style="padding:26px 8px;border:2px solid rgb(var(--a1)/.6)">${v}</div>`,
+ polaroid:(v,t)=>`<div class="bg-white text-neutral-800 p-3 pb-5 rounded-md shadow-2xl -rotate-1 hover:rotate-0 transition-transform duration-300">${v}<p class="fh text-center mt-4 text-lg font-bold">${t}</p></div>`,
+ tv:v=>`<div class="rounded-[2rem] p-4 pr-9 shadow-2xl relative" style="background:linear-gradient(135deg,#57534e,#1c1917);border:4px solid #0c0a09"><div class="rounded-2xl overflow-hidden" style="border:8px solid #000">${v}</div><span class="absolute right-3 top-1/2 w-3 h-3 rounded-full bg-a1"></span></div>`,
+ neon:v=>`<div class="rounded-2xl p-1 bg-a1" style="box-shadow:0 0 30px rgb(var(--a1)/.7)"><div class="rounded-xl overflow-hidden bg-black">${v}</div></div>`,
+ browser:(v,t)=>`<div class="rounded-xl overflow-hidden border border-ink/20 shadow-2xl bg-card"><div class="flex items-center gap-2 px-4 py-2.5 border-b border-ink/10"><span class="w-3 h-3 rounded-full bg-red-400"></span><span class="w-3 h-3 rounded-full bg-yellow-400"></span><span class="w-3 h-3 rounded-full bg-green-400"></span><span class="text-xs opacity-70 ml-3 truncate">${t}</span></div>${v}</div>`
+};
+function videoCard(v){
+ const T=esc(v.title||''),fr=FRAMES[v.frame]?v.frame:'rounded',integ=fr==='polaroid'||fr==='browser',above=v.titlePos==='above',
+ hd=(T&&!integ)?`<h3 class="fh text-xl font-bold text-center ${above?'mb-4':'mt-4'}">${T}</h3>`:'',
+ cap=v.caption?`<p class="text-xs opacity-75 mt-3 text-center leading-relaxed">${esc(v.caption)}</p>`:'';
+ return`<figure class="w-full">${above?hd:''}${FRAMES[fr](videoEl(v),T)}${above?'':hd}${cap}</figure>`}
 const SECTIONS={
 hero:c=>{const h=c.hero;return`<div class="max-w-7xl mx-auto px-6 pt-28 pb-16 grid lg:grid-cols-12 gap-12 items-center min-h-[92vh]">
 <div class="lg:col-span-7"><div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-a1/20 border border-a1/40 text-a2 dark:text-a1 text-xs font-semibold tracking-wider uppercase mb-6"><i class="${esc(h.badgeIcon)}"></i> ${esc(h.badge)}</div>
@@ -213,8 +258,15 @@ events:c=>{const e=c.events,n=Math.min((e.items||[]).length,3)||1,U=c.ui||{};ret
 location:c=>{const l=c.location,b=c.brand,soc=b.socials&&b.socials[0],U=c.ui||{};return`<div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center"><div class="lg:col-span-6"><span class="text-a2 dark:text-a1 text-xs font-bold tracking-widest uppercase mb-3 block">${esc(l.kicker)}</span><h2 class="text-4xl font-bold mb-6">${esc(l.title)}</h2><p class="text-base mb-8 font-light opacity-80 leading-relaxed">${esc(l.text)}</p>
 <div class="space-y-4 mb-8"><div class="flex gap-4 p-4 rounded-2xl bg-bg border border-ink/10"><div class="w-10 h-10 rounded-full bg-a1/20 text-a1 flex items-center justify-center shrink-0"><i class="fa-solid fa-location-dot"></i></div><div><h4 class="font-semibold text-sm mb-1">${esc(U.address||'Address')}</h4><p class="text-xs opacity-80">${esc(l.address)}</p></div></div>
 <div class="flex gap-4 p-4 rounded-2xl bg-bg border border-ink/10"><div class="w-10 h-10 rounded-full bg-a1/20 text-a1 flex items-center justify-center shrink-0"><i class="fa-regular fa-clock"></i></div><div><h4 class="font-semibold text-sm mb-1">${esc(U.hours||'Opening Hours')}</h4><p class="text-xs opacity-80 leading-relaxed">${(l.hours||[]).map(h=>`${esc(h[0])}: ${esc(h[1])}`).join('<br>')}</p></div></div></div>
-<div class="flex flex-wrap items-center gap-4">${soc&&b.handle?`<a href="${esc(soc.url)}" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-full bg-bg border border-ink/20 font-semibold text-xs uppercase tracking-wider hover:border-a1 flex items-center gap-2.5"><i class="${esc(soc.icon)} text-a1 text-base"></i>${esc(U.follow||'Follow')} ${esc(b.handle)}</a>`:''}${l.extra?`<span class="text-xs text-a1 font-medium"><i class="${esc(l.extraIcon)} mr-1"></i>${esc(l.extra)}</span>`:''}</div></div>
-<div class="lg:col-span-6"><div class="rounded-3xl border border-ink/20 shadow-2xl bg-bg p-4"><div class="h-[380px] rounded-2xl relative border border-ink/10 bg-card/50 flex flex-col items-center justify-center text-center p-6"><div class="w-14 h-14 rounded-full bg-a1 text-on flex items-center justify-center text-xl shadow-xl animate-bounce mb-3"><i class="${esc(b.icon)}"></i></div><h3 class="text-xl font-bold mb-1">${esc(b.name)}</h3><p class="text-xs opacity-75 mb-5">${esc(l.address)}</p><a href="${mapUrl(l.address)}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-a2 text-white font-bold text-xs hover:opacity-90 shadow-md"><i class="fa-solid fa-diamond-turn-right mr-2"></i>${esc(U.map||'Open In Maps')}</a></div></div></div></div>`},
+<div class="flex flex-wrap items-center gap-4">${soc&&b.handle?`<a href="${esc(url(soc.url))}" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-full bg-bg border border-ink/20 font-semibold text-xs uppercase tracking-wider hover:border-a1 flex items-center gap-2.5"><i class="${esc(soc.icon)} text-a1 text-base"></i>${esc(U.follow||'Follow')} ${esc(b.handle)}</a>`:''}${l.extra?`<span class="text-xs text-a1 font-medium"><i class="${esc(l.extraIcon)} mr-1"></i>${esc(l.extra)}</span>`:''}</div></div>
+<div class="lg:col-span-6"><div class="rounded-3xl border border-ink/20 shadow-2xl bg-bg p-4">${mapEmbed(l,U)}<div class="${mapEmbed(l,U)?'hidden':''} h-[380px] rounded-2xl relative border border-ink/10 bg-card/50 flex flex-col items-center justify-center text-center p-6"><div class="w-14 h-14 rounded-full bg-a1 text-on flex items-center justify-center text-xl shadow-xl animate-bounce mb-3"><i class="${esc(b.icon)}"></i></div><h3 class="text-xl font-bold mb-1">${esc(b.name)}</h3><p class="text-xs opacity-75 mb-5">${esc(l.address)}</p><a href="${mapUrl(l.address)}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-a2 text-white font-bold text-xs hover:opacity-90 shadow-md"><i class="fa-solid fa-diamond-turn-right mr-2"></i>${esc(U.map||'Open In Maps')}</a></div></div></div></div>`},
+
+video:c=>{const k=c.video||{},cols=Math.max(1,Math.min(3,+k.columns||2));
+ return`<div class="max-w-6xl mx-auto px-6">${head(k.kicker,k.title,k.text)}<div class="grid grid-cols-1 ${cols>1?'md:grid-cols-'+cols:'max-w-4xl mx-auto'} gap-10 items-start">${(k.videos||[]).map(videoCard).join('')}</div></div>`},
+
+faq:c=>{const f=c.faq||{};return`<div class="max-w-3xl mx-auto px-6">${head(f.kicker,f.title,f.text)}<div class="space-y-3">${(f.items||[]).map(i=>`<details class="p-5 rounded-2xl bg-card border border-ink/10"><summary class="cursor-pointer font-bold flex justify-between gap-4"><span>${esc(i.q)}</span><i class="fa-solid fa-plus text-a1 text-xs mt-1.5"></i></summary><p class="text-sm opacity-80 leading-relaxed mt-3">${esc(i.a)}</p></details>`).join('')}</div></div>`},
+
+contact:c=>{const k=c.contact||{},ep=/^https:/i.test(k.endpoint||'')?k.endpoint:'',cl='w-full px-4 py-3 rounded-xl bg-card border border-ink/15 text-sm focus:outline-none focus:border-a1 mt-1.5';return`<div class="max-w-3xl mx-auto px-6">${head(k.kicker,k.title,k.text)}<form ${ep?`action="${esc(ep)}" method="POST"`:''} onsubmit="return send(event)" class="p-8 rounded-3xl bg-bg border border-ink/10 shadow-xl space-y-4">${(k.fields||[]).map(f=>{const nm=esc(f.key||f.label),r=f.required?'required':'';return`<label class="block text-xs font-semibold">${esc(f.label)}${f.type==='textarea'?`<textarea name="${nm}" rows="4" ${r} class="${cl}"></textarea>`:`<input name="${nm}" type="${f.type==='email'?'email':f.type==='tel'?'tel':'text'}" ${r} class="${cl}">`}</label>`}).join('')}<input name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true"><button class="w-full py-3.5 rounded-xl bg-a1 text-on font-bold text-sm shadow-lg hover:opacity-90">${esc(k.button)}</button></form></div>`},
 
 custom:c=>{const u=c.custom||{};return`<div class="max-w-7xl mx-auto px-6">${u.title?head(u.kicker,u.title):''}<div>${u.html||''}</div></div>`}
 };
@@ -234,7 +286,7 @@ const header=act=>{const b=cfg.brand,nav=act.filter(s=>s.nav);return`<header cla
 <div id="drawer" class="hidden md:hidden bg-card border-b border-ink/10 px-6 py-6 flex-col gap-4">${nav.map(s=>`<a href="#${s.id}" class="dl text-base hover:text-a1">${esc(s.nav)}</a>`).join('')}</div></header>`};
 
 const footer=act=>{const b=cfg.brand,f=cfg.footer,n=f.newsletter||{},U=cfg.ui||{};return`<footer class="bg-card border-t border-ink/10 py-16"><div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-<div><div class="flex items-center gap-2.5 mb-3"><div class="w-8 h-8 rounded-full bg-a1 flex items-center justify-center text-on text-sm"><i class="${esc(b.icon)}"></i></div><span class="fh font-bold tracking-wider uppercase">${esc(b.name)}</span></div><p class="text-xs leading-relaxed mb-4 opacity-75">${esc(f.about)}</p><div class="flex gap-2.5">${(b.socials||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-bg border border-ink/10 flex items-center justify-center hover:bg-a1 hover:text-on transition-all"><i class="${esc(s.icon)} text-xs"></i></a>`).join('')}</div></div>
+<div><div class="flex items-center gap-2.5 mb-3"><div class="w-8 h-8 rounded-full bg-a1 flex items-center justify-center text-on text-sm"><i class="${esc(b.icon)}"></i></div><span class="fh font-bold tracking-wider uppercase">${esc(b.name)}</span></div><p class="text-xs leading-relaxed mb-4 opacity-75">${esc(f.about)}</p><div class="flex gap-2.5">${(b.socials||[]).map(s=>`<a href="${esc(url(s.url))}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-bg border border-ink/10 flex items-center justify-center hover:bg-a1 hover:text-on transition-all"><i class="${esc(s.icon)} text-xs"></i></a>`).join('')}</div></div>
 <div><h4 class="fh font-bold text-xs text-a1 uppercase tracking-wider mb-4">${esc(U.links||'Quick Links')}</h4><ul class="space-y-2 text-xs opacity-80">${act.filter(s=>s.nav).map(s=>`<li><a href="#${s.id}" class="hover:text-a1">${esc(s.nav)}</a></li>`).join('')}</ul></div>
 <div>${n.on===false?'':`<h4 class="fh font-bold text-xs text-a1 uppercase tracking-wider mb-4">${esc(n.title)}</h4><p class="text-xs leading-relaxed mb-3 opacity-75">${esc(n.text)}</p><form onsubmit="return news(event)" class="flex flex-col gap-2"><input type="email" required placeholder="Your email" class="px-3.5 py-2 rounded-lg bg-bg border border-ink/15 text-xs focus:outline-none focus:border-a1"><button class="px-4 py-2 rounded-lg bg-a1 text-on font-bold text-xs">${esc(n.button)}</button></form>`}</div>
 <div><h4 class="fh font-bold text-xs text-a1 uppercase tracking-wider mb-4">${esc(U.footHours||'Hours')}</h4>${(cfg.location.hours||[]).map(h=>`<p class="text-xs mb-1.5 opacity-80">${esc(h[0])}: ${esc(h[1])}</p>`).join('')}${f.status?`<div class="inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full bg-a1/20 text-a2 dark:text-a1 text-[10px] font-bold"><span class="w-2 h-2 rounded-full bg-a1 animate-ping"></span>${esc(f.status)}</div>`:''}</div></div>
@@ -244,6 +296,10 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('transl
 window.openModal=t=>{$('#modal-title').textContent=t;$('#modal').classList.replace('hidden','flex')};
 window.closeModal=()=>{const m=$('#modal');if(m)m.classList.replace('flex','hidden')};
 window.booked=e=>{e.preventDefault();closeModal();e.target.reset();toast((cfg.ui||{}).booked||'Reserved!');return false};
+window.send=e=>{const f=e.target,c=cfg.contact||{};if(f.elements._gotcha&&f.elements._gotcha.value){e.preventDefault();return false}
+ if(/^https:/i.test(c.endpoint||''))return true;
+ e.preventDefault();const b=[...f.elements].filter(x=>x.name&&x.name!=='_gotcha').map(x=>x.name+': '+x.value).join('\n');
+ location.href='mailto:'+String(c.email||'').replace(/[^\w.+@-]/g,'')+'?subject='+encodeURIComponent(c.subject||'Website enquiry')+'&body='+encodeURIComponent(b);toast(c.thanks||'Opening your email app…');return false};
 window.news=e=>{e.preventDefault();e.target.reset();toast(cfg.footer.newsletter.thanks||'Thank you for subscribing!');return false};
 
 function setMode(dark){document.documentElement.classList.toggle('dark',dark);const i=$('#theme-i');if(i)i.className=dark?'fa-solid fa-sun':'fa-solid fa-moon';store.set('site_mode',dark?'dark':'light')}
@@ -256,6 +312,8 @@ function render(){
  document.querySelectorAll('.dl').forEach(a=>a.onclick=()=>$('#drawer').classList.add('hidden'));
  document.querySelectorAll('.ev-btn').forEach(b=>b.onclick=()=>openModal(b.dataset.ev));
  setMode(document.documentElement.classList.contains('dark'));
+ document.documentElement.classList.toggle('edit-mode',editMode);
+ if(editMode)tagEdits();
  init3D();
 }
 
@@ -280,7 +338,7 @@ cafe:{label:'Coffee, panini & cold drink',items:{
   add(m,new THREE.TorusGeometry(.48,.1,16,36,3.61),cer,.74,.88,0,[0,0,-1.53]);
   const cv=document.createElement('canvas');cv.width=512;cv.height=256;const x=cv.getContext('2d');
   x.fillStyle='#221510';x.fillRect(0,0,512,256);x.strokeStyle=c.theme.accent;x.lineWidth=8;x.strokeRect(16,16,480,224);
-  x.fillStyle='#F5ECE0';x.textAlign='center';x.textBaseline='middle';let s=48;const t=c.brand.name.toUpperCase();
+  x.fillStyle='#F5ECE0';x.textAlign='center';x.textBaseline='middle';let s=48;const t=unm(c.brand.name).toUpperCase();
   do{x.font=`700 ${s}px serif`;s-=2}while(x.measureText(t).width>430&&s>12);x.fillText(t,256,128);
   add(m,new THREE.PlaneGeometry(1.05,.55),mat(0xffffff,{map:new THREE.CanvasTexture(cv),side:2}),0,.85,.88);
   const N=30,sp=new Float32Array(N*3).map((_,i)=>i%3===1?1.7+Math.random()*1.6:(Math.random()-.5)*.4),geo=new THREE.BufferGeometry();
@@ -339,7 +397,7 @@ async function init3D(){
  window.f3d=()=>{};
  const box=$('#stage');if(!box)return;
  const m3=cfg.model3d,def=MODELS[m3.model]||MODELS.cafe,tt=$('#tt'),ts=$('#ts');
- tt.textContent=m3.stageTitle||'Interactive Platter';ts.textContent='Drag to orbit or scroll the page to turn';
+ tt.textContent=unm(m3.stageTitle||'Interactive Platter');ts.textContent='Drag to orbit or scroll the page to turn';
  try{await loadJS('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');if(m3.model==='glb')await loadJS('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js')}
  catch(e){box.innerHTML='<p class="p-8 text-sm text-center">The 3D library could not load. Check your internet connection.</p>';return}
  if(!box.isConnected||T3)return;
@@ -355,8 +413,8 @@ async function init3D(){
  if(m3.model==='glb')new THREE.GLTFLoader().load(m3.glbUrl,r=>{const o=r.scene,bb=new THREE.Box3().setFromObject(o),sz=bb.getSize(new THREE.Vector3()),c=bb.getCenter(new THREE.Vector3()),s=3.5/Math.max(sz.x,sz.y,sz.z);o.scale.setScalar(s);o.position.set(-c.x*s,-bb.min.y*s,-c.z*s);g.add(o)},undefined,()=>{ts.textContent='Could not load the .glb file (check the URL and that the server allows CORS).'});
  const tp=new THREE.Vector3(0,3.2,7.5),tl=new THREE.Vector3(0,.4,0),cl=tl.clone();let user=0,scr=0,drag=false,px=0;cam.position.copy(tp);
  window.f3d=k=>{const it=(def.items||{})[k];
-  if(it){const x=it.at[0],y=it.at[1],z=it.at[2],r=Math.hypot(x,z);let a=Math.atan2(-x,z)-scr;a+=Math.round((user-a)/6.2832)*6.2832;user=a;tp.set(0,y+1.4,r+(it.d||3.4));tl.set(0,y,r);tt.textContent=it.title;ts.textContent=it.sub}
-  else{user=Math.round(user/6.2832)*6.2832;tp.set(0,3.2,7.5);tl.set(0,.4,0);tt.textContent=m3.stageTitle||'Interactive Platter';ts.textContent='Drag to orbit or scroll the page to turn'}
+  if(it){const x=it.at[0],y=it.at[1],z=it.at[2],r=Math.hypot(x,z);let a=Math.atan2(-x,z)-scr;a+=Math.round((user-a)/6.2832)*6.2832;user=a;tp.set(0,y+1.4,r+(it.d||3.4));tl.set(0,y,r);tt.textContent=unm(it.title);ts.textContent=unm(it.sub)}
+  else{user=Math.round(user/6.2832)*6.2832;tp.set(0,3.2,7.5);tl.set(0,.4,0);tt.textContent=unm(m3.stageTitle||'Interactive Platter');ts.textContent='Drag to orbit or scroll the page to turn'}
   document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('on',b.dataset.k===(it?k:'all')))};
  const down=x=>{drag=true;px=x},move=x=>{if(drag){user+=(x-px)*.008;px=x}};
  box.addEventListener('mousedown',e=>down(e.clientX),sg);addEventListener('mousemove',e=>move(e.clientX),sg);addEventListener('mouseup',()=>drag=false,sg);
@@ -433,7 +491,16 @@ function syncEd(){
    ============================================================ */
 document.documentElement.classList.toggle('dark',(store.get('site_mode')||cfg.theme.mode)==='dark');
 applyTheme();render();
-addEventListener('message',e=>{const d=e.data;if(d&&d.studioCfg){cfg=d.studioCfg;applyTheme();render()}}); // live preview from Site Studio
+function unm(s){return String(s==null?'':s).replace(/\u2063[\u200b\u200c]+\u2064/g,'')}
+function tagEdits(){const rx=/\u2063([\u200b\u200c]+)\u2064/g,w=document.createTreeWalker($('#app'),NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())ns.push(w.currentNode);
+ ns.forEach(n=>{const m=[...n.nodeValue.matchAll(rx)];if(!m.length)return;const ids=m.map(x=>parseInt(x[1].replace(/\u200b/g,'0').replace(/\u200c/g,'1'),2));n.nodeValue=n.nodeValue.replace(rx,'');const el=n.parentElement;if(el)el.dataset.cp=(el.dataset.cp?el.dataset.cp+',':'')+ids.join(',')});
+ document.querySelectorAll('#app *').forEach(el=>{for(const a of [...el.attributes])if(a.value.indexOf('\u2063')>-1)a.value=unm(a.value)})}
+document.addEventListener('click',e=>{if(!editMode)return;const t=e.target;if(t.isContentEditable)return;e.preventDefault();e.stopPropagation();const el=t.closest('[data-cp]');if(!el)return;
+ const ids=el.dataset.cp.split(',').map(Number),own=[...el.childNodes].filter(n=>n.nodeType===3).map(n=>n.nodeValue).join('').trim();
+ if(ids.length>1||![...el.children].every(c=>/^(I|SVG)$/i.test(c.tagName))||own!==String(vals[ids[0]]).trim()){parent.postMessage({studioJump:ids[0]},'*');return}
+ el.setAttribute('contenteditable','true');el.focus();el.onkeydown=k=>{if(k.key==='Enter'){k.preventDefault();el.blur()}};
+ el.addEventListener('blur',()=>{el.removeAttribute('contenteditable');parent.postMessage({studioEditIdx:ids[0],value:el.textContent.trim()},'*')},{once:true})},true);
+addEventListener('message',e=>{const d=e.data;if(d&&d.studioCfg){cfg=d.studioCfg;editMode=!!d.studioEdit;vals=d.studioVals||[];applyTheme();render()}if(d&&d.studioScroll){const x=document.getElementById(d.studioScroll);if(x)x.scrollIntoView({behavior:'smooth'})}}); // live preview from Site Studio
 if(SHOW_EDITOR)buildEditor();
 </script>
 </body>

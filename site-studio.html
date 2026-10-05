@@ -1,2164 +1,238 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>✦ Site Studio Pro — Universal Builder</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-:root {
-  color-scheme: dark;
-  --bg:#0b0a0a; --pn:#141212; --pnl:#1e1b1b; --ln:#2f2a2a; --ln-light:#423b3b;
-  --tx:#f5f0eb; --mu:#b0a59c; --ac:#e09f5b; --ac-hover:#f0b47a;
-  --input-bg:#0e0c0b; --card-grad-a:#2a2420; --card-grad-b:#1e1a17;
-  --code-bg:#0a0908; --code-tx:#e8e2d8;
-  --success:#4ade80; --danger:#f87171;
-  --glow:0 0 20px rgba(224,159,91,0.15);
-  --radius:10px; --shadow:0 10px 30px -8px rgba(0,0,0,0.8);
-}
-html[data-theme="light"] {
-  color-scheme: light;
-  --bg:#f3efe9; --pn:#ffffff; --pnl:#ece7e0; --ln:#ddd5ca; --ln-light:#c4b8a7;
-  --tx:#2a2420; --mu:#7a6e62; --ac:#c87a2e; --ac-hover:#b56a22;
-  --input-bg:#fbf8f5; --card-grad-a:#fdf9f3; --card-grad-b:#f3ede2;
-  --code-bg:#1e1e1e; --code-tx:#f0f0f0;
-  --glow:0 0 20px rgba(200,122,46,0.15);
-  --shadow:0 10px 30px -10px rgba(90,70,50,0.25);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font:13px/1.5 'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg); color:var(--tx); height:100vh; display:flex; flex-direction:column;
-  overflow:hidden; -webkit-font-smoothing:antialiased; transition:background 0.25s,color 0.25s;
-}
-button,select,input,textarea{font:inherit;color:inherit}
-
-header{
-  display:flex; align-items:center;
-  background:color-mix(in srgb,var(--pn) 85%,transparent);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--ln); padding:8px 16px; gap:12px; z-index:100; min-height:56px;
-}
-.header-scroll{display:flex;align-items:center;gap:10px;width:100%;overflow-x:auto;scrollbar-width:none}
-.header-scroll::-webkit-scrollbar{display:none}
-.brand{
-  font-weight:700; font-size:15px; letter-spacing:.3px; display:flex; align-items:center; gap:10px;
-  white-space:nowrap; padding-right:12px; border-right:1px solid var(--ln);
-}
-.brand i{color:var(--ac); font-size:18px; filter:drop-shadow(0 0 8px color-mix(in srgb,var(--ac) 40%,transparent))}
-.btn-grp{display:flex;align-items:center;gap:6px;white-space:nowrap}
-
-.b{
-  background:color-mix(in srgb,var(--tx) 4%,transparent); border:1px solid var(--ln);
-  border-radius:8px; padding:7px 14px; cursor:pointer; display:inline-flex; align-items:center;
-  gap:7px; font-size:12.5px; white-space:nowrap;
-  transition:all .2s cubic-bezier(.4,0,.2,1); text-decoration:none; color:var(--tx);
-  font-weight:500; backdrop-filter:blur(4px); user-select:none;
-}
-.b:hover{
-  border-color:var(--ac); background:color-mix(in srgb,var(--ac) 8%,transparent);
-  transform:translateY(-1px); box-shadow:0 4px 12px color-mix(in srgb,var(--bg) 60%,transparent);
-}
-.b:active{transform:translateY(0)}
-.b.p{
-  background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 75%,#000));
-  color:#120e08; font-weight:700; border:0; box-shadow:0 4px 16px color-mix(in srgb,var(--ac) 25%,transparent);
-}
-.b.p:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.b.active{background:var(--ac);color:#120e08;border-color:var(--ac);font-weight:600}
-.b.icon-only{padding:7px 10px}
-.b.warn{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,transparent)}
-.b.warn:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);border-color:var(--danger)}
-.spacer{flex:1;min-width:12px}
-.hide-mob{display:inline-flex}
-@media (max-width:768px){.hide-mob{display:none!important}}
-
-select.b{
-  -webkit-appearance:none; appearance:none;
-  background:color-mix(in srgb,var(--tx) 4%,transparent);
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23b0a59c' d='M5 6L0 0h10z'/></svg>");
-  background-repeat:no-repeat; background-position:right 10px center; padding-right:28px;
-  color:var(--tx); cursor:pointer;
-}
-select.b option{background:var(--pnl);color:var(--tx)}
-html[data-theme="light"] select.b{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%237a6e62' d='M5 6L0 0h10z'/></svg>");
-}
-
-main{flex:1;display:flex;min-height:0;position:relative;overflow:hidden}
-#side{
-  width:480px; min-width:260px; max-width:70vw;
-  overflow-y:auto; overflow-x:hidden; padding:12px 14px 20px;
-  background:var(--pn); border-right:1px solid var(--ln);
-  scrollbar-width:thin; scrollbar-color:var(--ln) transparent;
-  transition:background .25s,width .2s cubic-bezier(.4,0,.2,1);
-  display:flex; flex-direction:column; flex-shrink:0;
-}
-#side::-webkit-scrollbar{width:6px}
-#side::-webkit-scrollbar-thumb{background:var(--ln);border-radius:3px}
-
-#resizer{
-  width:6px; cursor:col-resize; background:var(--pn); border-right:1px solid var(--ln);
-  position:relative; flex-shrink:0; transition:background .15s; z-index:30;
-}
-#resizer::before{
-  content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:2px; height:28px; background:var(--ln-light); border-radius:1px;
-  transition:background .15s,height .15s;
-}
-#resizer:hover{background:color-mix(in srgb,var(--ac) 15%,var(--pn))}
-#resizer:hover::before{background:var(--ac);height:40px}
-#resizer.dragging{background:var(--ac)}
-#resizer.dragging::before{background:#120e08}
-body.side-collapsed #side{width:0!important;padding:0;border:0;overflow:hidden}
-body.side-collapsed #resizer{display:none}
-
-#view{
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  background:color-mix(in srgb,var(--bg) 70%,#000); padding:16px; overflow:hidden;
-  position:relative; min-width:0; transition:background .25s;
-}
-html[data-theme="light"] #view{background:color-mix(in srgb,var(--bg) 85%,#888)}
-#wrap{
-  width:100%; height:100%; background:#fff; border-radius:12px; overflow:hidden;
-  transition:width .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
-  box-shadow:var(--shadow),0 0 0 1px color-mix(in srgb,var(--tx) 4%,transparent);
-  position:relative;
-}
-iframe{width:100%;height:100%;border:0;display:block}
-
-#side-toolbar{
-  display:flex; gap:6px; margin-bottom:10px; align-items:center;
-  position:sticky; top:-12px; background:var(--pn); padding:8px 0 10px;
-  z-index:20; border-bottom:1px solid var(--ln);
-}
-#search{
-  flex:1; background:var(--input-bg); border:1px solid var(--ln); border-radius:8px;
-  padding:7px 12px 7px 30px; font-size:12.5px; color:var(--tx);
-  transition:border-color .2s,box-shadow .2s;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b0a59c' stroke-width='2.5' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.3-4.3'/></svg>");
-  background-repeat:no-repeat; background-position:10px center; background-size:12px;
-}
-#search:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 10%,transparent)}
-html[data-theme="light"] #search{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a6e62' stroke-width='2.5' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.3-4.3'/></svg>")}
-
-#quick-bar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-#quick-bar .b{padding:5px 10px;font-size:11px}
-
-#tree-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.chip{
-  font-size:11px; padding:4px 10px; border-radius:20px;
-  background:color-mix(in srgb,var(--tx) 5%,transparent); border:1px solid var(--ln);
-  cursor:pointer; color:var(--mu); transition:all .15s; text-transform:capitalize; font-weight:500;
-  display:inline-flex; align-items:center; gap:5px;
-}
-.chip:hover{color:var(--ac);border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,transparent)}
-.chip.off{opacity:.4;text-decoration:line-through}
-
-details{
-  border:1px solid var(--ln); border-radius:var(--radius); margin:8px 0;
-  background:color-mix(in srgb,var(--tx) 1.5%,transparent);
-  transition:border-color .2s,background .2s,box-shadow .2s;
-}
-details[open]{border-color:var(--ln-light);background:color-mix(in srgb,var(--tx) 3%,transparent)}
-details.highlight{box-shadow:0 0 0 2px var(--ac)}
-details.section-off{opacity:.5}
-summary{
-  cursor:pointer; padding:9px 14px; font-weight:600; display:flex; gap:10px; align-items:center;
-  user-select:none; list-style:none; font-size:13px; border-radius:var(--radius); transition:color .15s;
-}
-summary::-webkit-details-marker{display:none}
-summary:hover{color:var(--ac)}
-summary i.fa-chevron-right{transition:transform .2s;font-size:9px;color:var(--mu)}
-details[open] > summary i.fa-chevron-right{transform:rotate(90deg);color:var(--ac)}
-.in{padding:6px 14px 14px;border-top:1px solid color-mix(in srgb,var(--tx) 4%,transparent)}
-
-label.f{display:block;margin:10px 0;position:relative}
-label.f > span{
-  display:flex; align-items:center; gap:6px;
-  color:var(--mu); font-size:11px; font-weight:500; margin-bottom:4px;
-  text-transform:capitalize; letter-spacing:.2px;
-}
-label.f > span .hint{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:14px; height:14px; border-radius:50%; background:color-mix(in srgb,var(--tx) 8%,transparent);
-  font-size:9px; color:var(--mu); cursor:help; transition:all .15s;
-}
-label.f > span .hint:hover{background:var(--ac);color:#120e08}
-
-.i{
-  width:100%; background:var(--input-bg); border:1px solid var(--ln); border-radius:7px;
-  padding:8px 11px; color:var(--tx); font-size:12.5px;
-  transition:border-color .2s,box-shadow .2s;
-}
-.i:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 10%,transparent)}
-textarea.i{min-height:72px;resize:vertical;line-height:1.45;font-family:inherit}
-textarea.code-inline{
-  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; min-height:130px;
-  line-height:1.55; background:var(--code-bg); color:var(--code-tx);
-}
-.row{display:flex;gap:8px;align-items:center}
-.sm{padding:4px 10px;font-size:11px;border-radius:6px}
-.th{width:56px;height:38px;object-fit:cover;border-radius:6px;border:1px solid var(--ln);background:#000;flex-shrink:0}
-.th-round{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--ln);background:#000;flex-shrink:0}
-
-.sec-ctrl{display:flex;gap:3px;margin-left:auto;opacity:0;transition:opacity .15s}
-details > summary:hover .sec-ctrl{opacity:1}
-.sec-ctrl .b{padding:2px 7px;font-size:10px;border-radius:5px}
-
-#mob-tabs{display:none;width:100%;border-top:1px solid var(--ln);background:var(--pnl)}
-#mob-tabs button{
-  flex:1;padding:12px;background:none;border:0;color:var(--mu);font-weight:600;
-  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-size:13px;
-}
-#mob-tabs button.active{color:var(--ac);border-bottom-color:var(--ac);background:color-mix(in srgb,var(--tx) 2%,transparent)}
-
-#msg{
-  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
-  background:var(--ac); color:#120c06; padding:10px 22px; border-radius:30px;
-  font-weight:700; font-size:12.5px; box-shadow:0 12px 30px rgba(0,0,0,.4);
-  opacity:0; transition:all .3s cubic-bezier(.34,1.56,.64,1); z-index:999;
-  pointer-events:none; white-space:nowrap; display:flex; align-items:center; gap:8px;
-}
-#msg.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#msg .undo-btn{
-  background:rgba(0,0,0,.2); border:0; color:#120c06; padding:2px 10px;
-  border-radius:12px; cursor:pointer; font-weight:700; pointer-events:auto; font-size:11px;
-  margin-left:4px;
-}
-
-#save-indicator{
-  position:fixed; bottom:20px; right:20px; background:var(--pn); border:1px solid var(--ln);
-  border-radius:30px; padding:6px 14px; font-size:11px; color:var(--mu);
-  display:flex; align-items:center; gap:8px; z-index:90; opacity:0;
-  transition:opacity .3s; pointer-events:none;
-}
-#save-indicator.show{opacity:1}
-#save-indicator .dot{width:6px;height:6px;border-radius:50%;background:var(--success)}
-
-#welcome{
-  position:fixed; inset:56px 0 0 0; background:var(--bg); display:none;
-  z-index:200; padding:24px; overflow-y:auto;
-}
-#welcome.show{display:block}
-#drop{
-  margin:40px auto; text-align:center; padding:44px 36px;
-  border:2px dashed var(--ln); border-radius:20px; max-width:760px;
-  line-height:1.6; background:var(--pn); box-shadow:var(--shadow);
-}
-.preset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:24px;text-align:left}
-.preset-card{
-  background:linear-gradient(145deg,var(--card-grad-a),var(--card-grad-b));
-  border:1px solid var(--ln); border-radius:12px; padding:16px; cursor:pointer;
-  transition:all .25s cubic-bezier(.34,1.56,.64,1); position:relative; overflow:hidden;
-}
-.preset-card::after{
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg,transparent 40%,color-mix(in srgb,var(--ac) 8%,transparent));
-  opacity:0; transition:opacity .3s;
-}
-.preset-card:hover{
-  border-color:var(--ac); transform:translateY(-4px) scale(1.01);
-  box-shadow:0 16px 40px rgba(0,0,0,.4),var(--glow);
-}
-.preset-card:hover::after{opacity:1}
-.preset-card h4{margin:0 0 6px;font-size:14px;color:var(--tx);display:flex;align-items:center;gap:8px}
-.preset-card p{margin:0;font-size:11.5px;color:var(--mu);line-height:1.4}
-.preset-swatch{position:absolute;top:12px;right:12px;display:flex;gap:3px}
-.preset-swatch span{width:10px;height:10px;border-radius:50%;border:1px solid color-mix(in srgb,var(--tx) 20%,transparent)}
-.preset-cat-label{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin:24px 0 10px;text-align:left}
-
-.modal{
-  position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(8px);
-  display:none; z-index:500; align-items:center; justify-content:center; padding:20px;
-}
-.modal.show{display:flex}
-.modal-inner{
-  background:var(--pn); border:1px solid var(--ln); border-radius:16px;
-  padding:26px 30px; max-width:560px; width:100%;
-  box-shadow:0 30px 60px rgba(0,0,0,.6); max-height:86vh; overflow-y:auto;
-}
-.modal-inner.wide{max-width:940px}
-.modal-inner h3{font-size:18px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.modal-head h3{margin:0}
-.shortcut-list{display:flex;flex-direction:column;gap:10px}
-.shortcut-row{display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:13px}
-.kbd{
-  font-family:ui-monospace,Menlo,monospace; background:var(--input-bg);
-  border:1px solid var(--ln); border-bottom-width:2px; padding:3px 8px;
-  border-radius:6px; font-size:11px; color:var(--ac); white-space:nowrap;
-}
-
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:14px}
-.picker-item{
-  border:1px solid var(--ln); border-radius:10px; padding:10px; cursor:pointer;
-  transition:all .2s; background:color-mix(in srgb,var(--tx) 2%,transparent);
-}
-.picker-item:hover{border-color:var(--ac);transform:translateY(-2px)}
-.picker-swatches{display:flex;gap:4px;margin-bottom:8px}
-.picker-swatches span{width:20px;height:20px;border-radius:5px;border:1px solid color-mix(in srgb,var(--tx) 15%,transparent)}
-.picker-item .name{font-size:12px;font-weight:600;color:var(--tx)}
-.picker-item .sub{font-size:10.5px;color:var(--mu);margin-top:2px}
-
-.proj-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.proj-item{
-  display:flex; align-items:center; gap:10px;
-  background:color-mix(in srgb,var(--tx) 3%,transparent); border:1px solid var(--ln);
-  border-radius:10px; padding:10px 14px; font-size:13px;
-}
-.proj-item .meta{flex:1;min-width:0}
-.proj-item .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.proj-item .time{font-size:11px;color:var(--mu);margin-top:2px}
-.proj-item button{padding:4px 10px;font-size:11px}
-
-#tour-overlay{
-  position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:400;
-  display:none; align-items:center; justify-content:center;
-}
-#tour-overlay.show{display:flex}
-#tour-card{
-  background:var(--pn); border:1px solid var(--ln); border-radius:16px;
-  padding:26px 28px; max-width:440px; width:90%;
-  box-shadow:0 30px 60px rgba(0,0,0,.6); position:relative;
-}
-#tour-card h4{font-size:17px;margin-bottom:8px;color:var(--tx);display:flex;align-items:center;gap:10px}
-#tour-card p{font-size:13px;color:var(--mu);line-height:1.6;margin-bottom:18px}
-#tour-progress{display:flex;gap:4px;margin-bottom:12px}
-#tour-progress span{flex:1;height:4px;border-radius:2px;background:var(--ln);transition:background .2s}
-#tour-progress span.active{background:var(--ac)}
-#tour-actions{display:flex;justify-content:space-between;gap:8px}
-
-#section-menu{
-  position:absolute; background:var(--pn); border:1px solid var(--ln);
-  border-radius:10px; padding:6px; z-index:150;
-  box-shadow:0 16px 40px rgba(0,0,0,.5); min-width:220px; display:none;
-}
-#section-menu.show{display:block}
-#section-menu button{
-  display:flex; align-items:center; gap:10px; width:100%;
-  background:none; border:0; color:var(--tx); padding:8px 12px;
-  border-radius:6px; cursor:pointer; text-align:left; font-size:12.5px;
-}
-#section-menu button:hover{background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac)}
-#section-menu button[disabled]{cursor:not-allowed}
-
-#emoji-pop{
-  position:absolute; background:var(--pn); border:1px solid var(--ln);
-  border-radius:10px; padding:10px; z-index:200;
-  box-shadow:0 16px 40px rgba(0,0,0,.5);
-  display:none; grid-template-columns:repeat(8,1fr); gap:4px; max-width:320px;
-}
-#emoji-pop.show{display:grid}
-#emoji-pop button{
-  background:none; border:0; font-size:20px; cursor:pointer; padding:6px;
-  border-radius:6px; line-height:1;
-}
-#emoji-pop button:hover{background:color-mix(in srgb,var(--ac) 20%,transparent)}
-
-/* ═══ CODE EDITOR MODAL ═══ */
-.code-tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--ln);padding-bottom:0}
-.code-tabs button{
-  background:none;border:0;color:var(--mu);padding:10px 18px;cursor:pointer;
-  font-weight:600;font-size:13px;border-bottom:2px solid transparent;
-  transition:all .2s;border-radius:8px 8px 0 0;
-  display:inline-flex;align-items:center;gap:7px;
-}
-.code-tabs button.active{color:var(--ac);border-bottom-color:var(--ac);background:color-mix(in srgb,var(--ac) 6%,transparent)}
-.code-tabs button:hover{color:var(--tx)}
-.code-tabs button .count{
-  font-size:10px;background:color-mix(in srgb,var(--tx) 10%,transparent);
-  padding:1px 6px;border-radius:8px;font-weight:700;
-}
-.code-editor{
-  width:100%;min-height:340px;
-  font-family:ui-monospace,Menlo,Consolas,'Roboto Mono',monospace;
-  font-size:13px;line-height:1.65;background:var(--code-bg);border:1px solid var(--ln);
-  border-radius:10px;padding:16px;color:var(--code-tx);resize:vertical;
-  tab-size:2;-moz-tab-size:2;
-}
-.code-editor:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 12%,transparent)}
-.code-snippets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-.code-snippets .label{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-right:4px}
-.code-snippets button{
-  font-size:11px;padding:5px 10px;border-radius:6px;
-  background:color-mix(in srgb,var(--tx) 5%,transparent);
-  border:1px solid var(--ln);color:var(--mu);cursor:pointer;transition:all .15s;
-}
-.code-snippets button:hover{color:var(--ac);border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,transparent)}
-.code-info{
-  font-size:11.5px;color:var(--mu);margin-bottom:12px;display:flex;align-items:center;gap:6px;
-  padding:8px 12px;border-radius:8px;background:color-mix(in srgb,var(--ac) 6%,transparent);
-  border:1px solid color-mix(in srgb,var(--ac) 20%,transparent);
-}
-.code-info i{color:var(--ac)}
-
-.glow-text{text-shadow:0 0 20px color-mix(in srgb,var(--ac) 30%,transparent)}
-::selection{background:var(--ac);color:#120e08}
-.fade-in{animation:fadeIn .4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.badge-new{
-  font-size:9px; font-weight:700; background:var(--ac); color:#120e08;
-  padding:1px 6px; border-radius:8px; text-transform:uppercase; letter-spacing:.5px;
-  margin-left:auto;
-}
-
-@media (max-width:768px){
-  header{padding:8px 10px;min-height:52px}
-  .brand span{display:none}
-  #resizer{display:none}
-  #side{width:100%!important;max-width:100%;position:absolute;inset:0;z-index:10;border-right:0}
-  #view{position:absolute;inset:0;padding:0;z-index:9}
-  #wrap{border-radius:0}
-  #mob-tabs{display:flex;z-index:20}
-  .view-mode-editor #view{display:none}
-  .view-mode-editor #side{display:flex}
-  .view-mode-preview #view{display:flex}
-  .view-mode-preview #side{display:none}
-  .modal-inner{padding:20px 18px}
-  .code-editor{min-height:220px;font-size:12px}
-}
-</style>
-</head>
-<body class="view-mode-editor">
-
-<header>
-  <div class="header-scroll">
-    <div class="brand"><i class="fa-solid fa-layer-group"></i><span>Site Studio Pro</span></div>
-
-    <div class="btn-grp">
-      <button class="b icon-only" id="toggle-side" title="Toggle sidebar (Ctrl+B)"><i class="fa-solid fa-bars-staggered"></i></button>
-      <button class="b" id="new-site" title="Start a fresh blank site"><i class="fa-solid fa-file-circle-plus"></i> <span class="hide-mob">New</span></button>
-    </div>
-
-    <div class="btn-grp">
-      <select id="preset" class="b" title="Load a preset template" style="max-width:170px;"></select>
-      <label class="b" title="Import HTML or JSON">
-        <i class="fa-solid fa-folder-open"></i>
-        <span class="hide-mob">Import</span>
-        <input id="f-tpl" type="file" accept=".html,.htm,.json" hidden>
-      </label>
-    </div>
-
-    <div class="btn-grp">
-      <button class="b sm icon-only" id="undo" title="Undo (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
-      <button class="b sm icon-only" id="redo" title="Redo (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
-    </div>
-
-    <div class="btn-grp">
-      <button class="b" id="open-projects" title="Saved projects"><i class="fa-solid fa-bookmark"></i> <span class="hide-mob">Projects</span></button>
-      <button class="b" id="save" title="Save project (Ctrl+S)"><i class="fa-solid fa-floppy-disk"></i> <span class="hide-mob">Save</span></button>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="btn-grp hide-mob">
-      <button class="b active icon-only" data-w="100%" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
-      <button class="b icon-only" data-w="820px" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
-      <button class="b icon-only" data-w="390px" title="Mobile"><i class="fa-solid fa-mobile-screen"></i></button>
-    </div>
-
-    <button class="b icon-only" id="theme-toggle" title="Toggle theme (Ctrl+D)"><i class="fa-solid fa-moon"></i></button>
-    <button class="b icon-only" id="help" title="Shortcuts & help"><i class="fa-solid fa-keyboard"></i></button>
-    <button class="b p" id="export" title="Download website (Ctrl+E)">
-      <i class="fa-solid fa-cloud-arrow-down"></i> <span class="hide-mob">Export</span>
-    </button>
-  </div>
-</header>
-
-<main id="app-main">
-  <div id="side">
-    <div id="side-toolbar">
-      <input id="search" type="text" placeholder="Search fields & content…">
-      <button class="b sm icon-only" id="expand-all" title="Expand all"><i class="fa-solid fa-angles-down"></i></button>
-      <button class="b sm icon-only" id="collapse-all" title="Collapse all"><i class="fa-solid fa-angles-up"></i></button>
-    </div>
-
-    <div id="quick-bar">
-      <button class="b" id="btn-palettes" title="Quick color palettes"><i class="fa-solid fa-swatchbook"></i> Palette</button>
-      <button class="b" id="btn-fonts" title="Font pairings"><i class="fa-solid fa-font"></i> Fonts</button>
-      <button class="b" id="btn-emoji-hint" title="Add or change emoji icons"><i class="fa-solid fa-icons"></i> Icons</button>
-      <button class="b" id="btn-add-section" title="Add a new section"><i class="fa-solid fa-plus"></i> Section</button>
-      <button class="b" id="btn-code" title="Custom CSS & JavaScript"><i class="fa-solid fa-code"></i> Code <span class="badge-new">New</span></button>
-    </div>
-
-    <div id="tree-nav"></div>
-    <div id="tree"></div>
-  </div>
-  <div id="resizer" title="Drag to resize · Double-click to collapse"></div>
-  <div id="view"><div id="wrap"><iframe id="fr" title="Live Preview"></iframe></div></div>
-</main>
-
-<div id="mob-tabs">
-  <button id="btn-tab-edit" class="active" onclick="setMobileView('editor')"><i class="fa-solid fa-sliders"></i> Design & Content</button>
-  <button id="btn-tab-prev" onclick="setMobileView('preview')"><i class="fa-solid fa-eye"></i> Live Site</button>
-</div>
-
-<div id="welcome" class="show">
-  <div id="drop">
-    <h2 style="margin:0 0 10px;font-size:22px;font-weight:700" class="glow-text">
-      <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--ac)"></i> Let's build something great
-    </h2>
-    <p style="color:var(--mu);margin:0 0 22px;font-size:13.5px;line-height:1.7">
-      Pick a ready-made template, start with a blank canvas, or drop in an existing site file.
-    </p>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:8px">
-      <button class="b p" id="start-blank" style="padding:14px 26px;font-size:14px">
-        <i class="fa-solid fa-file-circle-plus"></i> Start Blank Canvas
-      </button>
-      <button class="b" id="start-demo" style="padding:14px 22px;font-size:14px">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> Use Demo Template
-      </button>
-    </div>
-
-    <p class="preset-cat-label" style="text-align:center">Or choose a ready-made preset</p>
-    <div class="preset-grid" id="preset-cards"></div>
-
-    <div style="margin-top:28px;border-top:1px solid var(--ln);padding-top:22px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-      <label class="b" style="padding:12px 24px;font-size:13.5px">
-        <i class="fa-solid fa-upload"></i> Import HTML / Project
-        <input id="f-first" type="file" accept=".html,.htm,.json" hidden>
-      </label>
-      <button class="b" id="skip-welcome" style="padding:12px 22px;font-size:13.5px"><i class="fa-solid fa-forward"></i> Keep last session</button>
-    </div>
-  </div>
-</div>
-
-<div id="msg"></div>
-<div id="save-indicator"><span class="dot"></span><span>All changes saved</span></div>
-
-<div id="section-menu"></div>
-<div id="emoji-pop"></div>
-
-<!-- Shortcuts -->
-<div class="modal" id="shortcut-modal">
-  <div class="modal-inner">
-    <div class="modal-head">
-      <h3><i class="fa-solid fa-keyboard" style="color:var(--ac)"></i> Keyboard shortcuts</h3>
-      <button class="b icon-only" onclick="document.getElementById('shortcut-modal').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="shortcut-list">
-      <div class="shortcut-row"><span>Undo</span><span class="kbd">Ctrl / ⌘ + Z</span></div>
-      <div class="shortcut-row"><span>Redo</span><span class="kbd">Ctrl / ⌘ + Y</span></div>
-      <div class="shortcut-row"><span>Save project</span><span class="kbd">Ctrl / ⌘ + S</span></div>
-      <div class="shortcut-row"><span>Export website</span><span class="kbd">Ctrl / ⌘ + E</span></div>
-      <div class="shortcut-row"><span>Toggle sidebar</span><span class="kbd">Ctrl / ⌘ + B</span></div>
-      <div class="shortcut-row"><span>Toggle theme</span><span class="kbd">Ctrl / ⌘ + D</span></div>
-      <div class="shortcut-row"><span>Open Code editor</span><span class="kbd">Ctrl / ⌘ + K</span></div>
-      <div class="shortcut-row"><span>Focus search</span><span class="kbd">/</span></div>
-      <div class="shortcut-row"><span>Close modal</span><span class="kbd">Esc</span></div>
-    </div>
-    <div style="margin-top:22px;text-align:right;display:flex;gap:8px;justify-content:flex-end">
-      <button class="b" id="replay-tour"><i class="fa-solid fa-graduation-cap"></i> Replay tour</button>
-      <button class="b p" onclick="document.getElementById('shortcut-modal').classList.remove('show')">Got it</button>
-    </div>
-  </div>
-</div>
-
-<!-- Palettes -->
-<div class="modal" id="palette-modal">
-  <div class="modal-inner">
-    <div class="modal-head">
-      <h3><i class="fa-solid fa-swatchbook" style="color:var(--ac)"></i> Quick palettes</h3>
-      <button class="b icon-only" onclick="document.getElementById('palette-modal').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <p style="color:var(--mu);font-size:12.5px;margin-bottom:4px">Click any palette to instantly retheme your site. Your content stays the same.</p>
-    <div class="picker-grid" id="palette-grid"></div>
-  </div>
-</div>
-
-<!-- Fonts -->
-<div class="modal" id="font-modal">
-  <div class="modal-inner">
-    <div class="modal-head">
-      <h3><i class="fa-solid fa-font" style="color:var(--ac)"></i> Font pairings</h3>
-      <button class="b icon-only" onclick="document.getElementById('font-modal').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <p style="color:var(--mu);font-size:12.5px;margin-bottom:4px">Curated heading + body combinations.</p>
-    <div class="picker-grid" id="font-grid"></div>
-  </div>
-</div>
-
-<!-- Projects -->
-<div class="modal" id="projects-modal">
-  <div class="modal-inner">
-    <div class="modal-head">
-      <h3><i class="fa-solid fa-bookmark" style="color:var(--ac)"></i> Saved projects</h3>
-      <button class="b icon-only" onclick="document.getElementById('projects-modal').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <p style="color:var(--mu);font-size:12.5px">Projects are stored in your browser. Save up to 8 named versions.</p>
-    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <button class="b p" id="save-named"><i class="fa-solid fa-plus"></i> Save current as…</button>
-      <button class="b" id="export-all"><i class="fa-solid fa-download"></i> Export .json</button>
-    </div>
-    <div class="proj-list" id="proj-list"></div>
-  </div>
-</div>
-
-<!-- Code editor modal -->
-<div class="modal" id="code-modal">
-  <div class="modal-inner wide">
-    <div class="modal-head">
-      <h3><i class="fa-solid fa-code" style="color:var(--ac)"></i> Custom CSS & JavaScript</h3>
-      <button class="b icon-only" onclick="closeCodeModal()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="code-info">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Your code runs inside the exported site. Use <code style="background:color-mix(in srgb,var(--tx) 8%,transparent);padding:1px 5px;border-radius:4px">var(--accent)</code>, <code style="background:color-mix(in srgb,var(--tx) 8%,transparent);padding:1px 5px;border-radius:4px">var(--bg)</code>, and <code style="background:color-mix(in srgb,var(--tx) 8%,transparent);padding:1px 5px;border-radius:4px">var(--text)</code> to match your theme.</span>
-    </div>
-    <div class="code-tabs">
-      <button data-code-tab="css" class="active"><i class="fa-brands fa-css3-alt"></i> CSS <span class="count" id="css-count">0</span></button>
-      <button data-code-tab="js"><i class="fa-brands fa-js"></i> JavaScript <span class="count" id="js-count">0</span></button>
-    </div>
-    <div class="code-snippets" id="code-snippets"></div>
-    <textarea id="code-editor" class="code-editor" spellcheck="false" placeholder="/* Paste or type your CSS here… */"></textarea>
-    <div style="display:flex;justify-content:space-between;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <div style="display:flex;gap:6px">
-        <button class="b warn" id="code-clear"><i class="fa-solid fa-trash"></i> Clear</button>
-        <button class="b" id="code-copy"><i class="fa-solid fa-copy"></i> Copy</button>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="b" onclick="closeCodeModal()">Cancel</button>
-        <button class="b p" id="code-apply"><i class="fa-solid fa-check"></i> Apply & close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Tour -->
-<div id="tour-overlay">
-  <div id="tour-card">
-    <div id="tour-progress"></div>
-    <h4 id="tour-title"></h4>
-    <p id="tour-text"></p>
-    <div id="tour-actions">
-      <button class="b" id="tour-skip">Skip</button>
-      <button class="b p" id="tour-next">Next</button>
-    </div>
-  </div>
-</div>
-
-<datalist id="fonts">
-  <option value="Inter"><option value="Poppins"><option value="Playfair Display"><option value="DM Serif Display">
-  <option value="Plus Jakarta Sans"><option value="Montserrat"><option value="Oswald"><option value="Cinzel">
-  <option value="Lora"><option value="Raleway"><option value="Roboto Mono"><option value="Space Grotesk">
-  <option value="Sora"><option value="Outfit"><option value="Fraunces"><option value="Cormorant Garamond">
-  <option value="Libre Baskerville"><option value="Manrope"><option value="Bricolage Grotesque">
-</datalist>
-
-<script>
-/* ═══════════════════════════════════════════════════════════════════
-   PRESETS
-   ═══════════════════════════════════════════════════════════════════ */
-const DEFAULT_PRESETS = {
-  "Desi Restaurant & Dhaba": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"Zaika Heritage", tagline:"Authentic Dum Biryani, Karahi & Royal Mughlai Tandoor", logo:"🍛", logoType:"emoji", favicon:"" },
-    theme: { bg:"#0d0907", card:"#19120e", accent:"#e07a22", text:"#fbf6f0", fontHeading:"DM Serif Display", fontBody:"Poppins" },
-    header: { ctaText:"Order Delivery", ctaLink:"#menu", links:[{label:"Specials",url:"#menu"},{label:"Heritage",url:"#about"},{label:"Catering",url:"#contact"}] },
-    hero: { title:"Royal Flavors Roasted Over Slow Flame", sub:"Prepared with hand-pounded spices, slow-cooked clay handis, and recipes preserved across generations.", primaryBtn:"Explore Dastarkhwan", primaryUrl:"#menu", secondaryBtn:"Reserve Table", secondaryUrl:"#contact", heroImg:"https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"Our Story", title:"From Peshawar to Lahore: The Art of Coal & Clay", text:"Every morning starts before dawn with slow-simmered shorbas, freshly pulled rumali rotis, and charcoal-grilled seeks. We believe real food cannot be rushed.", stats:[{label:"Authentic Spices",val:"40+"},{label:"Family Legacy",val:"38 Yrs"},{label:"Daily Dum Pots",val:"100%"}] },
-    catalog: { title:"Dastarkhwan Specialties", categories:["Dum Biryani & Rice","Live Charcoal Karahi","Tandoor & Kebabs","Mithai & Chai"], items:[
-      { name:"Dum Pukht Mutton Biryani", desc:"Aged basmati layered with tender mutton marinated in saffron, caramelized onions and green cardamom.", price:"$18.50", tag:"Signature" },
-      { name:"Shinwari Lamb Karahi", desc:"Fresh lamb seared in rendered fat, tomatoes, black pepper, and ginger slivers in a cast iron wok.", price:"$24.00", tag:"Chef's Cut" },
-      { name:"Reshmi Malai Boti", desc:"Chicken breast morsels steeped in thick cream, green chilies, and coriander, char-broiled on skewers.", price:"$15.00", tag:"Popular" },
-      { name:"Zafrani Matka Kheer", desc:"Slow-reduced cardamom milk rice pudding topped with pistachios, chandi warq, and saffron.", price:"$7.50", tag:"Dessert" }
-    ]},
-    reviews: { badge:"Patron Praise", title:"Voices From Our Tables", quotes:[
-      { quote:"The lamb karahi brought back memories of roadside food streets in Rawalpindi. Outstanding aroma and spice balance.", author:"Tariq Mahmood", role:"Food Critic" },
-      { quote:"Unquestionably the best Dum Biryani in the city. The rice grain length and tenderness are unparalleled.", author:"Ayesha Malik", role:"Verified Diner" }
-    ]},
-    contact: { title:"Visit Our Dastarkhwan", address:"84 Heritage Blvd, Little South Asia", phone:"+1 (555) 786-2121", email:"reservations@zaikaheritage.com", hours:"Tue - Sun: 12:00 PM – 11:30 PM" }
-  },
-  "Tech / SaaS Platform": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"Nexora Cloud", tagline:"Autonomous Infrastructure for Modern Real-Time AI Workflows", logo:"⚡", logoType:"emoji", favicon:"" },
-    theme: { bg:"#090d16", card:"#111827", accent:"#38bdf8", text:"#f8fafc", fontHeading:"Plus Jakarta Sans", fontBody:"Inter" },
-    header: { ctaText:"Start Free Sandbox", ctaLink:"#hero", links:[{label:"Architecture",url:"#about"},{label:"Modules",url:"#menu"},{label:"Case Studies",url:"#reviews"}] },
-    hero: { title:"Compute at the Edge. Deploy without the Headaches.", sub:"Deliver low-latency AI inference, stateful distributed caching, and zero-cold-start pipelines in 35+ global regions.", primaryBtn:"Deploy Cluster in 60s", primaryUrl:"#", secondaryBtn:"Read Whitepaper", secondaryUrl:"#", heroImg:"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"High Throughput", title:"Engineered For Sub-Millisecond SLAs", text:"Eliminate unpredictable networking bottlenecks. Nexora automatically replicates telemetry, distributes tensor payloads, and scales down to zero.", stats:[{label:"Global Edge Nodes",val:"180+"},{label:"Mean P99 Latency",val:"4.2ms"},{label:"Uptime SLA",val:"99.99%"}] },
-    catalog: { title:"Core Infrastructure Modules", categories:["Inference Engines","Storage & DB","Security & Mesh"], items:[
-      { name:"TensorRoute Gateway", desc:"Dynamic GPU query routing with token-budget balancing across distributed edge regions.", price:"$0.0018/k req", tag:"AI Optimized" },
-      { name:"ChronoDB Cache", desc:"In-memory zero-latency key-value store equipped with CRDT real-time multi-region replication.", price:"$29/cluster", tag:"High Avail" },
-      { name:"MeshGuard Zero-Trust", desc:"Automated mutual TLS mTLS wireguard encapsulation with dynamic identity revocation.", price:"Included", tag:"Enterprise" }
-    ]},
-    reviews: { badge:"Engineer Benchmarks", title:"Built by Engineers for Engineers", quotes:[
-      { quote:"Migrating our inference microservices cut 40% off our monthly AWS cloud bill on day one.", author:"Marcus Vance", role:"VP of Engineering at FinScale" },
-      { quote:"Zero-downtime cluster provisioning was actually zero downtime. Our team couldn't be happier.", author:"Elena Rostova", role:"Chief Architect" }
-    ]},
-    contact: { title:"Deploy With Confidence", address:"500 Howard Street, Suite 300, San Francisco, CA", phone:"+1 (800) 555-0199", email:"hello@nexora-cloud.io", hours:"24/7 Global NOC Support" }
-  },
-  "Logistics & Global Freight": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"Apex Global Freight", tagline:"End-to-End Multimodal Cargo, Customs & Supply Chain Mobility", logo:"🚢", logoType:"emoji", favicon:"" },
-    theme: { bg:"#0d1117", card:"#161d27", accent:"#f59e0b", text:"#f1f5f9", fontHeading:"Montserrat", fontBody:"Inter" },
-    header: { ctaText:"Request Rate Quote", ctaLink:"#contact", links:[{label:"Solutions",url:"#menu"},{label:"Fleet Coverage",url:"#about"},{label:"Offices",url:"#contact"}] },
-    hero: { title:"Smarter Freight Transport Across Oceans, Rails & Sky", sub:"GPS-monitored intermodal supply chains connecting major commercial ports with real-time bill-of-lading transparency.", primaryBtn:"Track Consignment", primaryUrl:"#", secondaryBtn:"Calculate Freight", secondaryUrl:"#contact", heroImg:"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"Global Logistics", title:"Zero-Stall Supply Chains Across 120 Ports", text:"From specialized cold-chain pharmaceutical transit to breakbulk industrial equipment, Apex ensures regulatory compliance and predictable ETA execution.", stats:[{label:"Vessel TEU Capacity",val:"450k+"},{label:"Customs Clearance Rate",val:"99.8%"},{label:"Active Corridors",val:"78"}] },
-    catalog: { title:"Comprehensive Freight Services", categories:["Ocean Cargo","Air Priority","Intermodal Rail & Road"], items:[
-      { name:"Full Container Load (FCL)", desc:"Direct transoceanic shipping routes with guaranteed container allocation and customs docket filing.", price:"Custom Tariff", tag:"Maritime" },
-      { name:"Temperature Cold-Chain Air", desc:"Active cryogenic and insulated transport protocols for high-value pharmaceuticals.", price:"Expedited", tag:"Priority" },
-      { name:"Cross-Border Bonded Trucking", desc:"Telematics-equipped dry vans with continuous GPS and biometric door seal controls.", price:"Zone Based", tag:"Overland" }
-    ]},
-    reviews: { badge:"Client Trust", title:"Reliable Through Every Port Congestion", quotes:[
-      { quote:"Apex rerouted our supply containers around canal strikes without missing a single manufacturing milestone.", author:"Henrik Lindqvist", role:"Supply Director, Nordic Solar" },
-      { quote:"Their automated customs documentation took our clearance latency down from 48 hours to 4 hours.", author:"Claire Dupont", role:"Logistics Controller" }
-    ]},
-    contact: { title:"Global Operations Dispatch", address:"Terminal Pier 14, Port Logistics Way, Rotterdam", phone:"+31 10 555 4900", email:"dispatch@apexfreight-global.com", hours:"Port Gate: 24/7 Operations" }
-  },
-  "Artisan Bistro & Coffee": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"The Daily Brew", tagline:"Hand-Crafted Espresso, Sourdough Bakes & Slow Brunch", logo:"☕", logoType:"emoji", favicon:"" },
-    theme: { bg:"#14110f", card:"#1e1814", accent:"#d29054", text:"#f6ede4", fontHeading:"Playfair Display", fontBody:"Poppins" },
-    header: { ctaText:"Order Pickup", ctaLink:"#menu", links:[{label:"Coffee & Food",url:"#menu"},{label:"Roastery",url:"#about"},{label:"Hours",url:"#contact"}] },
-    hero: { title:"Small-Batch Roasts. Freshly Pulled Hospitality.", sub:"Sustainably sourced single-origin Arabica, stone-ground flours, and a warm neighborhood table ready for you.", primaryBtn:"View Daily Menu", primaryUrl:"#menu", secondaryBtn:"Find Our Table", secondaryUrl:"#contact", heroImg:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"Our Philosophy", title:"From Fair-Trade Farms Direct to Your Cup", text:"We profile-roast each bean harvest in small batches every Tuesday. Pair your cup with scratch-made sourdough loaves baked fresh before dawn.", stats:[{label:"Origin Countries",val:"7"},{label:"Fermentation Time",val:"36 Hrs"},{label:"House Blends",val:"4"}] },
-    catalog: { title:"Signature Menu & Bakes", categories:["Espresso & Pour-Over","Sourdough & Paninis","Pastries"], items:[
-      { name:"Single Origin Yirgacheffe", desc:"Notes of bergamot, jasmine, and ripe peach with crisp malic acidity.", price:"$5.25", tag:"Pour Over" },
-      { name:"Smoked Turkey & Gruyère Panini", desc:"Artisan sourdough pressed with house mustard relish, herb butter, and pickled shallots.", price:"$12.50", tag:"Bistro" },
-      { name:"Cardamom Pistachio Croffin", desc:"Flaky croissant pastry rolled in cinnamon cardamom sugar, filled with vanilla bean custard.", price:"$4.75", tag:"Bakery" }
-    ]},
-    reviews: { badge:"Community", title:"Warm Brews & Kind Words", quotes:[
-      { quote:"The friendliest staff in the city. The flat white has silky microfoam perfection every single morning.", author:"Julian Thorne", role:"Regular" },
-      { quote:"Their sourdough panini alone is worth the walk across town. Unmatched quality.", author:"Sophia Lin", role:"Neighbor" }
-    ]},
-    contact: { title:"Come Sit With Us", address:"414 Roastery Lane, Market District", phone:"+1 (555) 234-9812", email:"hello@dailybrewcafe.com", hours:"Daily: 6:30 AM – 7:00 PM" }
-  },
-  "Creative Agency & Portfolio": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"Studio Möbius", tagline:"Brand Identity, Digital Experiences & Motion Design", logo:"🔄", logoType:"emoji", favicon:"" },
-    theme: { bg:"#0a0a0c", card:"#141418", accent:"#a78bfa", text:"#f0f0f5", fontHeading:"Space Grotesk", fontBody:"Outfit" },
-    header: { ctaText:"Start a Project", ctaLink:"#contact", links:[{label:"Work",url:"#menu"},{label:"Studio",url:"#about"},{label:"Process",url:"#reviews"}] },
-    hero: { title:"We Build Brands That Refuse to Be Ignored", sub:"A multidisciplinary studio blending strategy, design, and technology to craft unforgettable digital identities.", primaryBtn:"View Our Work", primaryUrl:"#menu", secondaryBtn:"Book a Call", secondaryUrl:"#contact", heroImg:"https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"The Studio", title:"Small Team. Massive Impact.", text:"We're a tight-knit collective of designers, developers, and strategists who believe great work comes from deep collaboration and zero bureaucracy.", stats:[{label:"Projects Shipped",val:"240+"},{label:"Avg. Client Retention",val:"3.2 Yrs"},{label:"Design Awards",val:"17"}] },
-    catalog: { title:"What We Do Best", categories:["Branding","Web & Product","Motion"], items:[
-      { name:"Brand Identity Systems", desc:"Logo suites, typography scales, color systems, and comprehensive brand guidelines.", price:"From $8k", tag:"Identity" },
-      { name:"Product Design Sprints", desc:"Rapid prototyping, user testing, and high-fidelity UI kits ready for development.", price:"From $12k", tag:"Product" },
-      { name:"Motion & 3D Content", desc:"Animated brand assets, explainer videos, and interactive WebGL experiences.", price:"From $6k", tag:"Motion" }
-    ]},
-    reviews: { badge:"Kind Words", title:"What Partners Say", quotes:[
-      { quote:"Studio Möbius didn't just redesign our brand—they fundamentally changed how we talk about ourselves.", author:"Rina Patel", role:"CMO, Lumen Health" },
-      { quote:"The most collaborative and ego-free creative team we've ever worked with. Period.", author:"David Chen", role:"Founder, Arc Labs" }
-    ]},
-    contact: { title:"Let's Make Something Great", address:"22 Creative District, Brooklyn, NY", phone:"+1 (555) 890-3344", email:"hello@studiomobius.co", hours:"Mon–Fri: 10 AM – 6 PM EST" }
-  },
-  "Wellness & Yoga Studio": {
-    _order: ["hero","about","catalog","reviews","contact"],
-    custom: { css:"", js:"" },
-    brand: { name:"Still Point", tagline:"Mindful Movement, Breathwork & restorative practice", logo:"🧘", logoType:"emoji", favicon:"" },
-    theme: { bg:"#0f1210", card:"#181d19", accent:"#8bbf9f", text:"#f0f5f0", fontHeading:"Fraunces", fontBody:"Inter" },
-    header: { ctaText:"Book a Class", ctaLink:"#contact", links:[{label:"Schedule",url:"#menu"},{label:"Our Space",url:"#about"},{label:"Teachers",url:"#reviews"}] },
-    hero: { title:"Find Your Still Point in a Moving World", sub:"A sanctuary for mindful movement, deep rest, and conscious breath. All levels, all bodies, always welcome.", primaryBtn:"View Schedule", primaryUrl:"#menu", secondaryBtn:"New Student Offer", secondaryUrl:"#contact", heroImg:"https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=1200&q=80" },
-    about: { badge:"Our Space", title:"A Calm Corner in the City", text:"Natural light, cork floors, and a community that meets you exactly where you are. Our studio is designed to slow you down from the moment you walk in.", stats:[{label:"Weekly Classes",val:"42"},{label:"Certified Teachers",val:"8"},{label:"Community Members",val:"600+"}] },
-    catalog: { title:"Classes & Offerings", categories:["Vinyasa & Flow","Restorative & Yin","Meditation & Breath"], items:[
-      { name:"Morning Slow Flow", desc:"A gentle, grounding sequence to awaken the body and quiet the mind. All levels welcome.", price:"$22", tag:"Daily" },
-      { name:"Deep Restorative", desc:"Supported postures, guided breathwork, and deep relaxation with bolsters and blankets.", price:"$26", tag:"Evening" },
-      { name:"Breath & Meditation", desc:"Pranayama techniques and guided meditation to build resilience and inner calm.", price:"$20", tag:"Weekly" }
-    ]},
-    reviews: { badge:"Community", title:"What Our Students Say", quotes:[
-      { quote:"Still Point has become my anchor. The teachers are incredibly skilled and the space feels like a deep exhale.", author:"Maya K.", role:"Member since 2022" },
-      { quote:"I've tried many studios, but the warmth and expertise here are unmatched. It's truly a sanctuary.", author:"James L.", role:"Regular Practitioner" }
-    ]},
-    contact: { title:"Visit Us", address:"17 Serenity Lane, Greenpoint", phone:"+1 (555) 345-7788", email:"hello@stillpointyoga.com", hours:"Mon–Sun: 6:30 AM – 9:00 PM" }
-  }
-};
-
-const BLANK_CANVAS = {
-  _order: ["hero","about","catalog","reviews","contact"],
-  custom: { css:"", js:"" },
-  brand: { name:"My Project", tagline:"A fresh start for your next idea", logo:"✨", logoType:"emoji", favicon:"" },
-  theme: { bg:"#0b0a0a", card:"#1a1715", accent:"#e09f5b", text:"#f5f0eb", fontHeading:"Inter", fontBody:"Inter" },
-  header: { ctaText:"Get Started", ctaLink:"#contact", links:[{label:"About",url:"#about"},{label:"Work",url:"#catalog"}] },
-  hero: { title:"Hello, World.", sub:"This is your blank canvas. Click any field on the left to edit it — changes appear in the preview instantly.", primaryBtn:"Get Started", primaryUrl:"#about", secondaryBtn:"Learn More", secondaryUrl:"#catalog", heroImg:"" },
-  about: { badge:"About", title:"Tell your story", text:"Use this space to describe your project, business, or idea. Keep it short and compelling.", stats:[{label:"Projects",val:"100+"},{label:"Happy Clients",val:"50+"},{label:"Years",val:"5"}] },
-  catalog: { title:"What we offer", categories:[], items:[
-    { name:"First Item", desc:"Describe what makes this special. Edit this text on the left.", price:"$0", tag:"New" },
-    { name:"Second Item", desc:"Add more items by clicking the + button below.", price:"$0", tag:"Popular" }
-  ]},
-  reviews: { badge:"Reviews", title:"What people say", quotes:[
-    { quote:"An amazing experience from start to finish. Highly recommend!", author:"Happy Client", role:"Customer" }
-  ]},
-  contact: { title:"Get in touch", address:"123 Main Street", phone:"+1 (555) 000-0000", email:"hello@example.com", hours:"Mon–Fri · 9 AM – 5 PM" }
-};
-
-const OPTIONAL_SECTIONS = {
-  gallery: { badge:"Gallery", title:"In pictures", images:[
-    { url:"https://images.unsplash.com/photo-1497366216548-37526070297c?w=800", caption:"" },
-    { url:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800", caption:"" },
-    { url:"https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800", caption:"" }
-  ]},
-  faq: { badge:"FAQ", title:"Common questions", items:[
-    { q:"How do I get started?", a:"Reach out via the contact form below and we'll be in touch within 24 hours." },
-    { q:"What are your hours?", a:"We're open Monday through Friday, 9 AM to 5 PM." },
-    { q:"Do you offer refunds?", a:"Yes — a full refund within 30 days, no questions asked." }
-  ]},
-  cta: { title:"Ready to get started?", sub:"Reach out today and let's make something great together.", primaryBtn:"Contact Us", primaryUrl:"#contact", secondaryBtn:"", secondaryUrl:"" }
-};
-
-const PALETTES = [
-  { name:"Midnight Amber", bg:"#0d0907", card:"#19120e", accent:"#e07a22", text:"#fbf6f0" },
-  { name:"Ocean", bg:"#090d16", card:"#111827", accent:"#38bdf8", text:"#f8fafc" },
-  { name:"Forest", bg:"#0f1210", card:"#181d19", accent:"#8bbf9f", text:"#f0f5f0" },
-  { name:"Rose", bg:"#180a12", card:"#251521", accent:"#e88aa8", text:"#fdf2f6" },
-  { name:"Sunset", bg:"#1a0f0a", card:"#271a14", accent:"#f97316", text:"#fff7ed" },
-  { name:"Monochrome", bg:"#0a0a0a", card:"#161616", accent:"#f5f5f5", text:"#fafafa" },
-  { name:"Deep Violet", bg:"#0d0a18", card:"#1a1528", accent:"#a78bfa", text:"#f0edff" },
-  { name:"Cherry", bg:"#1a0c0e", card:"#281a1c", accent:"#ef4444", text:"#fef2f2" },
-  { name:"Paper (light)", bg:"#f8f5f0", card:"#ffffff", accent:"#c87a2e", text:"#2a2420", light:true },
-  { name:"Snow (light)", bg:"#fafafa", card:"#ffffff", accent:"#3b82f6", text:"#171717", light:true }
-];
-
-const FONT_PAIRS = [
-  { name:"Elegant", h:"Playfair Display", b:"Inter" },
-  { name:"Modern", h:"Plus Jakarta Sans", b:"Inter" },
-  { name:"Editorial", h:"DM Serif Display", b:"Poppins" },
-  { name:"Fraunces", h:"Fraunces", b:"Inter" },
-  { name:"Bold", h:"Montserrat", b:"Inter" },
-  { name:"Geometric", h:"Space Grotesk", b:"Outfit" },
-  { name:"Classic", h:"Cormorant Garamond", b:"Lora" },
-  { name:"Tech", h:"Sora", b:"Inter" },
-  { name:"Editorial Sans", h:"Libre Baskerville", b:"Manrope" },
-  { name:"Neo Grotesk", h:"Bricolage Grotesque", b:"Inter" }
-];
-
-const FIELD_HELP = {
-  "brand.name":"Business or project name, shown in the header.",
-  "brand.tagline":"Short one-line description. Appears in the browser tab.",
-  "brand.logo":"An emoji, image URL, or upload. Click the 😀 button to pick emoji.",
-  "brand.favicon":"Small icon shown in the browser tab. Upload a PNG or ICO (32×32).",
-  "theme.bg":"Main page background color.",
-  "theme.card":"Background for cards, boxes, and panels.",
-  "theme.accent":"Highlight color used for buttons, links, and borders.",
-  "theme.text":"Default text color across the site.",
-  "theme.fontHeading":"Font for titles and big text. Try the Fonts button for pairings.",
-  "theme.fontBody":"Font for paragraphs and body text.",
-  "hero.title":"The large headline at the top of the page.",
-  "hero.sub":"Supporting paragraph below the headline.",
-  "hero.heroImg":"Large image shown on the right of the hero section.",
-  "about.stats":"Small number boxes — good for stats, awards, or key metrics.",
-  "catalog.items":"Products, services, menu items, or portfolio pieces.",
-  "reviews.quotes":"Testimonials from happy clients or customers.",
-  "custom.css":"Custom CSS injected into the exported site. Use theme variables like var(--accent).",
-  "custom.js":"Custom JavaScript injected before </body>. Runs after the page loads."
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   CODE SNIPPETS
-   ═══════════════════════════════════════════════════════════════════ */
-const CODE_SNIPPETS = {
-  css: [
-    { name:"Fade-in sections", code:
-`.section{animation:fadeUp .8s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}` },
-    { name:"Glowing buttons", code:
-`.nav-btn{box-shadow:0 0 24px color-mix(in srgb, var(--accent) 45%, transparent)}` },
-    { name:"Animated underline links", code:
-`.nav-links a{position:relative}
-.nav-links a::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:0;background:var(--accent);transition:width .3s}
-.nav-links a:hover::after{width:100%}` },
-    { name:"Lift cards on hover", code:
-`.card{transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s}
-.card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 24px 50px -12px color-mix(in srgb, var(--accent) 40%, transparent)}` },
-    { name:"Fancy scrollbar", code:
-`::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--accent);border-radius:5px;border:2px solid var(--bg)}` },
-    { name:"Gradient hero text", code:
-`.hero-text h1{background:linear-gradient(135deg, var(--text), var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}` },
-    { name:"Pill-shaped nav", code:
-`nav.site-nav .container{background:color-mix(in srgb, var(--card) 70%, transparent);border-radius:60px;padding:10px 26px;border:1px solid var(--line);backdrop-filter:blur(20px)}
-nav.site-nav{background:transparent;border:0;padding:14px 0}` }
-  ],
-  js: [
-    { name:"Scroll reveal", code:
-`const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-},{threshold:0.15});
-document.querySelectorAll('section').forEach(s=>{
-  s.style.opacity=0; s.style.transform='translateY(40px)';
-  s.style.transition='all .9s cubic-bezier(.2,.7,.2,1)';
-  io.observe(s);
-});
-document.head.insertAdjacentHTML('beforeend',
-  '<style>.in{opacity:1!important;transform:none!important}</style>');` },
-    { name:"Animated number counters", code:
-`document.querySelectorAll('.stat-val').forEach(el=>{
-  const raw=el.textContent.trim();
-  const target=parseFloat(raw)||0;
-  const suffix=raw.replace(/[\\d.,]/g,'');
-  const dur=1400, start=performance.now();
-  function tick(now){
-    const p=Math.min((now-start)/dur, 1);
-    const eased=1-Math.pow(1-p, 3);
-    const val=target*eased;
-    el.textContent=(Number.isInteger(target)?Math.round(val):val.toFixed(1))+suffix;
-    if(p<1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-});` },
-    { name:"Sticky nav shadow on scroll", code:
-`const nav=document.querySelector('nav.site-nav');
-window.addEventListener('scroll',()=>{
-  nav.style.boxShadow=window.scrollY>20
-    ? '0 8px 30px -8px rgba(0,0,0,.4)'
-    : '';
-});` },
-    { name:"Back to top button", code:
-`const b=document.createElement('button');
-b.innerHTML='<i class="fa-solid fa-arrow-up"></i>';
-Object.assign(b.style,{
-  position:'fixed', bottom:'24px', right:'24px',
-  width:'48px', height:'48px', borderRadius:'50%',
-  border:0, background:'var(--accent)', color:'#120e08',
-  fontSize:'16px', cursor:'pointer', opacity:0,
-  transition:'opacity .3s, transform .3s', transform:'translateY(10px)',
-  zIndex:9999, boxShadow:'0 8px 24px rgba(0,0,0,.35)'
-});
-document.body.appendChild(b);
-window.addEventListener('scroll',()=>{
-  const show=window.scrollY>500;
-  b.style.opacity=show?1:0;
-  b.style.transform=show?'translateY(0)':'translateY(10px)';
-});
-b.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});` },
-    { name:"Year in footer", code:
-`document.querySelectorAll('footer').forEach(f=>{
-  f.innerHTML=f.innerHTML.replace(/\\d{4}/, new Date().getFullYear());
-});` },
-    { name:"Typewriter headline", code:
-`const h=document.querySelector('.hero-text h1');
-if(h){
-  const text=h.textContent;
-  h.textContent='';
-  h.style.borderRight='2px solid var(--accent)';
-  let i=0;
-  (function type(){
-    if(i<text.length){ h.textContent+=text[i++]; setTimeout(type,35); }
-    else setTimeout(()=>h.style.borderRight='none', 1200);
-  })();
-}` }
-  ]
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   GENERATOR
-   ═══════════════════════════════════════════════════════════════════ */
-function safeStyleContent(s) {
-  // Prevent closing the <style> tag prematurely
-  return String(s || '').replace(/<\/style>/gi, '<\\/style>');
-}
-function safeScriptContent(s) {
-  // Prevent closing the <script> tag prematurely
-  return String(s || '').replace(/<\/script>/gi, '<\\/script>');
-}
-
-function generateProductionHtml(c) {
-  const t = c.theme || {};
-  const b = c.brand || {};
-  const h = c.header || { links: [] };
-  const order = c._order || ["hero","about","catalog","reviews","contact"];
-
-  const logoHtml = (() => {
-    const logo = b.logo || '';
-    if (/^https?:|^data:/.test(logo)) return `<img src="${esc(logo)}" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover">`;
-    return `<span>${esc(logo || '✨')}</span>`;
-  })();
-
-  function heroSec() {
-    const hr = c.hero || {};
-    return `<section class="hero" id="hero"><div class="container hero-grid">
-      <div class="hero-text">
-        <h1>${esc(hr.title || '')}</h1>
-        <p>${esc(hr.sub || '')}</p>
-        <div class="hero-btns">
-          ${hr.primaryBtn ? `<a href="${esc(hr.primaryUrl || '#')}" class="nav-btn" style="padding:12px 28px;font-size:14.5px">${esc(hr.primaryBtn)}</a>` : ''}
-          ${hr.secondaryBtn ? `<a href="${esc(hr.secondaryUrl || '#')}" style="padding:11px 24px;font-size:14.5px;border:1px solid var(--line);border-radius:30px;display:inline-block">${esc(hr.secondaryBtn)}</a>` : ''}
-        </div>
-      </div>
-      ${hr.heroImg ? `<div class="hero-img"><img src="${esc(hr.heroImg)}" alt=""></div>` : ''}
-    </div></section>`;
-  }
-  function aboutSec() {
-    const ab = c.about || { stats: [] };
-    return `<section class="section" id="about"><div class="container about-grid">
-      <div><span class="badge">${esc(ab.badge || 'About')}</span><h2 class="section-title">${esc(ab.title || '')}</h2>
-        <p style="color:var(--text-dim);font-size:15px;line-height:1.7">${esc(ab.text || '')}</p></div>
-      <div class="stats-grid">${(ab.stats || []).map(s => `<div class="stat-box"><div class="stat-val">${esc(s.val || '')}</div><div class="stat-lbl">${esc(s.label || '')}</div></div>`).join('')}</div>
-    </div></section>`;
-  }
-  function catalogSec() {
-    const cat = c.catalog || { items: [] };
-    return `<section class="section" id="catalog"><div class="container">
-      <span class="badge">Offerings</span><h2 class="section-title">${esc(cat.title || 'What We Offer')}</h2>
-      <div class="catalog-grid">${(cat.items || []).map(it => `<div class="card">
-        <div><div class="card-head"><span class="card-name">${esc(it.name || '')}</span><span class="card-price">${esc(it.price || '')}</span></div>
-        <p class="card-desc">${esc(it.desc || '')}</p></div>
-        ${it.tag ? `<span class="card-tag">${esc(it.tag)}</span>` : ''}</div>`).join('')}</div>
-    </div></section>`;
-  }
-  function reviewsSec() {
-    const rev = c.reviews || { quotes: [] };
-    return `<section class="section" id="reviews"><div class="container">
-      <span class="badge">${esc(rev.badge || 'Testimonials')}</span><h2 class="section-title">${esc(rev.title || 'Client Feedback')}</h2>
-      <div class="reviews-grid">${(rev.quotes || []).map(q => `<div class="review-card">
-        <div class="review-quote">“${esc(q.quote || '')}”</div>
-        <div class="review-author">${esc(q.author || '')}</div>
-        <div class="review-role">${esc(q.role || '')}</div></div>`).join('')}</div>
-    </div></section>`;
-  }
-  function contactSec() {
-    const ct = c.contact || {};
-    return `<section class="section" id="contact"><div class="container">
-      <span class="badge">Get In Touch</span><h2 class="section-title">${esc(ct.title || 'Connect With Us')}</h2>
-      <div class="contact-box">
-        <div class="contact-item"><h4><i class="fa-solid fa-location-dot"></i> Address</h4><p>${esc(ct.address || '')}</p></div>
-        <div class="contact-item"><h4><i class="fa-solid fa-phone"></i> Direct Contact</h4><p>${esc(ct.phone || '')}<br>${esc(ct.email || '')}</p></div>
-        <div class="contact-item"><h4><i class="fa-regular fa-clock"></i> Timings</h4><p>${esc(ct.hours || '')}</p></div>
-      </div></div></section>`;
-  }
-  function gallerySec() {
-    const g = c.gallery || { images: [] };
-    return `<section class="section" id="gallery"><div class="container">
-      <span class="badge">${esc(g.badge || 'Gallery')}</span><h2 class="section-title">${esc(g.title || 'In Pictures')}</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px">
-        ${(g.images || []).map(img => `<div style="border-radius:14px;overflow:hidden;aspect-ratio:1;border:1px solid var(--line)">
-          <img src="${esc(img.url || '')}" alt="${esc(img.caption || '')}" style="width:100%;height:100%;object-fit:cover;display:block">
-        </div>`).join('')}
-      </div></div></section>`;
-  }
-  function faqSec() {
-    const f = c.faq || { items: [] };
-    return `<section class="section" id="faq"><div class="container" style="max-width:800px">
-      <span class="badge">${esc(f.badge || 'FAQ')}</span><h2 class="section-title">${esc(f.title || 'Common Questions')}</h2>
-      <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px">
-        ${(f.items || []).map(it => `<details style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0">
-          <summary style="padding:20px 24px;cursor:pointer;font-weight:600;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center">${esc(it.q || '')}<i class="fa-solid fa-plus" style="color:var(--accent);transition:transform .25s"></i></summary>
-          <div style="padding:0 24px 20px;color:var(--text-dim);font-size:14.5px;line-height:1.6">${esc(it.a || '')}</div>
-        </details>`).join('')}
-      </div></div></section>`;
-  }
-  function ctaSec() {
-    const ct = c.cta || {};
-    return `<section class="section" id="cta" style="background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 12%,var(--bg)),var(--bg))">
-      <div class="container" style="text-align:center;max-width:720px">
-        <h2 class="section-title">${esc(ct.title || '')}</h2>
-        <p style="color:var(--text-dim);font-size:16px;margin-bottom:26px">${esc(ct.sub || '')}</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          ${ct.primaryBtn ? `<a href="${esc(ct.primaryUrl || '#')}" class="nav-btn" style="padding:12px 28px;font-size:14.5px">${esc(ct.primaryBtn)}</a>` : ''}
-          ${ct.secondaryBtn ? `<a href="${esc(ct.secondaryUrl || '#')}" style="padding:11px 24px;font-size:14.5px;border:1px solid var(--line);border-radius:30px;display:inline-block">${esc(ct.secondaryBtn)}</a>` : ''}
-        </div>
-      </div></section>`;
-  }
-
-  const sectionMap = { hero: heroSec, about: aboutSec, catalog: catalogSec, reviews: reviewsSec, contact: contactSec, gallery: gallerySec, faq: faqSec, cta: ctaSec };
-  let sectionsHtml = '';
-  for (const key of order) if (sectionMap[key]) sectionsHtml += sectionMap[key]();
-
-  const faviconTag = b.favicon ? `<link rel="icon" href="${esc(b.favicon)}">` : '';
-
-  // Custom CSS injection
-  const customCssRaw = (c.custom && c.custom.css) ? c.custom.css : '';
-  const customCssTag = customCssRaw.trim()
-    ? `<style id="custom-css">\n${safeStyleContent(customCssRaw)}\n</style>`
-    : '';
-
-  // Custom JS injection (safe-escaped so it doesn't break the outer document)
-  const customJsRaw = (c.custom && c.custom.js) ? c.custom.js : '';
-  const customJsTag = customJsRaw.trim()
-    ? `<script id="custom-js">\n${safeScriptContent(customJsRaw)}\n<\/script>`
-    : '';
-
-  return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(b.name || 'Website')} | ${esc(b.tagline || '')}</title>
-${faviconTag}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.fontHeading || 'Playfair Display')}:wght@600;700&family=${encodeURIComponent(t.fontBody || 'Inter')}:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Site Studio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{
-  --bg:${t.bg || '#110e0c'};--card:${t.card || '#1c1714'};--accent:${t.accent || '#d89047'};
-  --text:${t.text || '#fbf8f5'};--text-dim:color-mix(in srgb,${t.text || '#fbf8f5'} 65%,transparent);
-  --line:color-mix(in srgb,${t.text || '#fbf8f5'} 10%,transparent);
-  --f-head:'${t.fontHeading || 'Playfair Display'}',serif;
-  --f-body:'${t.fontBody || 'Inter'}',sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--f-body);line-height:1.6;overflow-x:hidden}
-h1,h2,h3,h4{font-family:var(--f-head);line-height:1.2}
-a{color:inherit;text-decoration:none}
-.container{max-width:1160px;margin:0 auto;padding:0 24px}
-
-nav.site-nav{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:999;padding:14px 0}
-.nav-wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.nav-brand{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;font-family:var(--f-head)}
-.nav-links{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
-.nav-links a{color:var(--text-dim);font-size:13.5px;font-weight:500;transition:.2s}
-.nav-links a:hover{color:var(--accent)}
-.nav-btn{background:var(--accent);color:#120e08;padding:9px 22px;border-radius:30px;font-size:13px;font-weight:700;transition:.25s;display:inline-block;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.25)}
-.nav-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
-
-.hero{padding:90px 0 70px}
-.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
-.hero-text h1{font-size:clamp(34px,5.5vw,56px);margin-bottom:20px;letter-spacing:-.6px}
-.hero-text p{font-size:16.5px;color:var(--text-dim);margin-bottom:32px;max-width:540px;line-height:1.7}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
-.hero-img{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.65);aspect-ratio:4/3}
-.hero-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
-.hero-img:hover img{transform:scale(1.03)}
-
-.section{padding:90px 0;border-top:1px solid var(--line)}
-.badge{color:var(--accent);text-transform:uppercase;font-size:11.5px;letter-spacing:2px;font-weight:700;margin-bottom:12px;display:inline-block}
-.section-title{font-size:clamp(28px,4vw,42px);margin-bottom:18px}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}
-.stat-box{background:var(--card);padding:22px 16px;border-radius:14px;border:1px solid var(--line);text-align:center;transition:transform .25s,border-color .25s}
-.stat-box:hover{transform:translateY(-4px);border-color:var(--accent)}
-.stat-val{font-size:30px;font-weight:700;color:var(--accent);font-family:var(--f-head)}
-.stat-lbl{font-size:11.5px;color:var(--text-dim);margin-top:6px}
-
-.catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:40px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;transition:transform .25s,border-color .25s,box-shadow .25s;display:flex;flex-direction:column;justify-content:space-between}
-.card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 16px 40px rgba(0,0,0,.3)}
-.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
-.card-name{font-size:17.5px;font-weight:600}
-.card-price{color:var(--accent);font-weight:700;font-size:15px;white-space:nowrap}
-.card-desc{font-size:13.5px;color:var(--text-dim);margin-bottom:16px;line-height:1.55}
-.card-tag{align-self:flex-start;font-size:10px;text-transform:uppercase;background:color-mix(in srgb,var(--text) 8%,transparent);padding:4px 10px;border-radius:6px;color:var(--accent);font-weight:600}
-
-.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;margin-top:36px}
-.review-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px;position:relative}
-.review-card::before{content:'"';position:absolute;top:12px;left:20px;font-size:50px;color:var(--accent);opacity:.2;font-family:serif}
-.review-quote{font-size:15px;font-style:italic;margin-bottom:18px;line-height:1.6;position:relative;z-index:1}
-.review-author{font-weight:600;font-size:13.5px}
-.review-role{font-size:11.5px;color:var(--text-dim)}
-
-.contact-box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:44px;margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
-.contact-item h4{font-size:12.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;letter-spacing:1px}
-.contact-item p{color:var(--text-dim);font-size:14px;line-height:1.6}
-
-footer{padding:36px 0;border-top:1px solid var(--line);text-align:center;font-size:12.5px;color:var(--text-dim)}
-
-details[open] > summary i.fa-plus{transform:rotate(45deg)}
-
-@media(max-width:820px){
-  .hero-grid,.about-grid{grid-template-columns:1fr;gap:36px}
-  .stats-grid{grid-template-columns:repeat(3,1fr)}
-  .hero{padding:60px 0 50px}
-}
-@media(max-width:580px){
-  nav.site-nav{padding:12px 0}
-  .nav-wrap{flex-direction:column;align-items:stretch;gap:14px}
-  .nav-brand{justify-content:center}
-  .nav-links{justify-content:center;gap:16px;font-size:13px}
-  .nav-btn{text-align:center;width:100%}
-  .stats-grid{grid-template-columns:1fr}
-  .contact-box{padding:26px}
-  .section{padding:60px 0}
-}
+:root{--bg:#14110f;--pn:#1d1916;--ln:#352e29;--tx:#f1e9e0;--mu:#a39a90;--ac:#C98D53}
+*{box-sizing:border-box}
+body{margin:0;font:13px system-ui,sans-serif;background:var(--bg);color:var(--tx);height:100vh;display:flex;flex-direction:column}
+button,select,input,textarea{font:inherit;color:inherit}
+header{display:flex;gap:8px;align-items:center;padding:8px 12px;background:var(--pn);border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.b{background:#2a241f;border:1px solid var(--ln);border-radius:8px;padding:6px 10px;cursor:pointer;display:inline-block}
+.b:hover{border-color:var(--ac)}
+.b:focus-visible,.i:focus-visible,summary:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}.b.p{background:var(--ac);color:#1a1209;font-weight:700;border:0}
+main{flex:1;display:flex;min-height:0}
+#side{width:440px;max-width:50vw;overflow:auto;padding:10px;background:var(--pn);border-right:1px solid var(--ln)}
+#view{flex:1;display:flex;justify-content:center;background:#0c0a09;padding:10px;overflow:auto}
+#wrap{width:100%;height:100%;background:#fff;border-radius:10px;overflow:hidden;transition:width .25s}
+iframe{width:100%;height:100%;border:0}
+details{border:1px solid var(--ln);border-radius:8px;margin:6px 0;background:rgba(255,255,255,.02)}
+summary{cursor:pointer;padding:7px 10px;font-weight:600;text-transform:capitalize;display:flex;gap:6px;align-items:center}
+.in{padding:4px 10px 8px}
+label.f{display:block;margin:6px 0}
+label.f>span{display:block;color:var(--mu);font-size:11px;margin-bottom:2px;text-transform:capitalize}
+.i{width:100%;background:#120f0d;border:1px solid var(--ln);border-radius:6px;padding:6px 8px}
+textarea.i{min-height:64px;resize:vertical}
+.row{display:flex;gap:6px;align-items:center}.sm{padding:2px 8px;font-size:12px}
+.th{width:64px;height:44px;object-fit:cover;border-radius:6px;border:1px solid var(--ln)}
+#welcome{position:fixed;inset:49px 0 0 0;background:var(--bg);display:flex;z-index:5}
+#drop{margin:auto;text-align:center;padding:40px;border:2px dashed var(--ln);border-radius:16px;max-width:540px;line-height:1.6}
+#msg{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ac);color:#1a1209;padding:8px 16px;border-radius:10px;font-weight:700;opacity:0;transition:.3s;z-index:9;pointer-events:none}
 </style>
-${customCssTag}
 </head>
 <body>
+<header>
+ <b style="font-size:15px"><i class="fa-solid fa-sliders" style="color:var(--ac)"></i> Site Studio</b>
+ <label class="b">Open template<input id="f-tpl" type="file" accept=".html,.htm" hidden></label>
+ <select id="preset" class="b" title="Start from a preset"></select>
+ <button class="b" id="undo" title="Undo" aria-label="Undo">↶</button><button class="b" id="redo" title="Redo" aria-label="Redo">↷</button>
+ <label class="b">Load project<input id="f-proj" type="file" accept=".json" hidden></label>
+ <button class="b" id="save">Save project</button>
+ <span id="sv" style="color:var(--mu);font-size:11px" aria-live="polite"></span>
+ <span style="flex:1"></span>
+ <button class="b" id="editbtn" aria-pressed="true" title="Click text in the preview to edit it" aria-label="Toggle click-to-edit in preview" style="border-color:var(--ac)"><i class="fa-solid fa-pen-to-square"></i></button>
+ <button class="b" data-w="100%" title="Desktop" aria-label="Desktop preview"><i class="fa-solid fa-desktop"></i></button>
+ <button class="b" data-w="820px" title="Tablet" aria-label="Tablet preview"><i class="fa-solid fa-tablet-screen-button"></i></button>
+ <button class="b" data-w="390px" title="Phone" aria-label="Phone preview"><i class="fa-solid fa-mobile-screen"></i></button>
+ <button class="b p" id="export"><i class="fa-solid fa-download"></i> Export website</button>
+</header>
+<main><div id="side"><div id="tree"></div></div><div id="view"><div id="wrap"><iframe id="fr" title="Live preview"></iframe></div></div></main>
+<div id="welcome"><div id="drop"><h2 style="margin-top:0">Open your template</h2>
+ <p>Drag <b>modular-food-website.html</b> here, or pick it below. You can also open a site you exported earlier and keep editing it.</p>
+ <label class="b p">Choose file<input id="f-first" type="file" accept=".html,.htm" hidden></label></div></div>
+<div id="msg"></div>
+<div id="dlg" style="display:none;position:fixed;inset:0;background:#000a;z-index:20;align-items:center;justify-content:center"><div role="dialog" aria-modal="true" style="background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:20px;max-width:380px"><p id="dlg-t" style="margin-top:0;line-height:1.5"></p><div class="row" style="justify-content:flex-end"><button class="b" id="dlg-n">Cancel</button><button class="b p" id="dlg-y">Yes, replace</button></div></div></div>
+<datalist id="fonts"><option>Playfair Display<option>Cormorant Garamond<option>DM Serif Display<option>Oswald<option>Poppins<option>Inter<option>Lora<option>Montserrat<option>Raleway<option>Merriweather<option>Bebas Neue<option>Roboto Slab<option>Pacifico</datalist>
+<datalist id="ids"><option>hero<option>model3d<option>about<option>menu<option>team<option>reviews<option>gallery<option>events<option>video<option>faq<option>contact<option>location<option>custom</datalist>
 
-<nav class="site-nav">
-  <div class="container nav-wrap">
-    <div class="nav-brand">${logoHtml} ${esc(b.name || 'Brand')}</div>
-    <div class="nav-links">
-      ${(h.links || []).map(l => `<a href="${esc(l.url || '#')}">${esc(l.label || 'Link')}</a>`).join('')}
-      <a href="${esc(h.ctaLink || '#')}" class="nav-btn">${esc(h.ctaText || 'Get Started')}</a>
-    </div>
-  </div>
-</nav>
+<script>
+/* ---------- state & helpers ---------- */
+let src='',cfg=null,PRES={},hist=[],hi=-1,opened=new Set(),frLoaded=false,tm;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const get=p=>p.reduce((o,k)=>o[k],cfg),set=(p,v)=>{get(p.slice(0,-1))[p[p.length-1]]=v};
+const idb=(()=>{let db;const open=()=>db||(db=new Promise((ok,no)=>{if(!window.indexedDB)return no(new Error('no IndexedDB'));const r=indexedDB.open('site-studio',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}));
+ const tx=(m,f)=>open().then(d=>new Promise((ok,no)=>{const t=d.transaction('kv',m),q=f(t.objectStore('kv'));t.oncomplete=()=>ok(q.result);t.onerror=t.onabort=()=>no(t.error||new Error('storage error'))}));
+ return{get:k=>tx('readonly',s=>s.get(k)),set:(k,v)=>tx('readwrite',s=>s.put(v,k))}})();
+let warned=false;
+function save(){idb.set('cfg',JSON.stringify(cfg)).then(()=>{$('#sv').textContent='Autosaved ✓'}).catch(()=>{$('#sv').textContent='⚠ Not autosaved';if(!warned){warned=true;msg('⚠ Autosave failed (storage full or blocked). Click "Save project" to keep your work.')}})}
+const lum=h=>{const c=h.replace('#','').match(/../g).map(x=>{x=parseInt(x,16)/255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const ratio=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+function merge(a,b){if(b===undefined)return a;if(!b||typeof b!=='object'||Array.isArray(b))return b;const o={...a};for(const k in b)o[k]=(a&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))?merge(a[k],b[k]):b[k];return o}
+function msg(t){const m=$('#msg');m.textContent=t;m.style.opacity=1;clearTimeout(msg.t);msg.t=setTimeout(()=>m.style.opacity=0,3000)}
+const readText=f=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsText(f)});
+const readURL=f=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(f)});
+const shrink=f=>new Promise(ok=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1400/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.82))};i.onerror=()=>ok(r.result);i.src=r.result};r.readAsDataURL(f)});
+const slug=()=>((cfg&&cfg.brand&&cfg.brand.name)||'website').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'website';
+function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}
 
-${sectionsHtml}
-
-<footer><div class="container">© ${new Date().getFullYear()} ${esc(b.name || 'Site Studio Pro')}. All rights reserved.</div></footer>
-
-${customJsTag}
-</body>
-</html>`;
+/* ---------- read the template ---------- */
+/* HTML-like tokens are assembled from parts so editors and HTML parsers never mistake them for real tags inside this script. */
+const LT='<',TAG_OPEN=LT+'script>',TAG_CLOSE=LT+'/script>',SEO_A=LT+'!--seo-->',SEO_B=LT+'!--/seo-->';
+function parse(text){
+ const js=[...text.matchAll(new RegExp(TAG_OPEN+'([\\s\\S]*?)'+LT+'\\/script>','g'))].map(m=>m[1]).find(x=>x.includes('const CAFE'));
+ if(!js)throw new Error('This is not the modular template (or an export of it).');
+ const a=js.indexOf('const CAFE'),b=js.indexOf('const PRESETS'),e=js.indexOf('\n',b),mg=js.match(/function merge\(a,b\)\{.*\}/);
+ if(!mg||b<0)throw new Error('Could not find the config block in this file.');
+ const P=new Function(mg[0]+';'+js.slice(a,e)+';return PRESETS')();
+ const ex=text.match(new RegExp('(?:^|'+TAG_OPEN+')const EXPORTED_CFG=(.*);\\n','m'));
+ return{P,ex:ex?JSON.parse(ex[1]):null};
+}
+/* ---------- write the final site ---------- */
+function seoTags(c){
+ const s=c.seo||{},desc=s.description||c.brand.tagline,im=/^https?:/.test(s.image||'')?s.image:'';
+ const ld={'@context':'https://schema.org','@type':s.type||'Restaurant',name:c.brand.name,description:desc,address:c.location&&c.location.address,image:im||undefined};
+ const meta=n=>LT+'meta '+n+'>';
+ return SEO_A+meta('name="description" content="'+esc(desc)+'"')+meta('property="og:title" content="'+esc(c.brand.name)+'"')+meta('property="og:description" content="'+esc(desc)+'"')
+  +(im?meta('property="og:image" content="'+esc(im)+'"'):'')+meta('name="theme-color" content="'+esc(c.theme.accent)+'"')
+  +LT+'script type="application/ld+json">'+JSON.stringify(ld).replace(new RegExp(LT,'g'),'\\u003c')+TAG_CLOSE+SEO_B;
+}
+function build(c){
+ const j=JSON.stringify(c).replace(new RegExp(LT,'g'),'\\u003c');
+ return src.replace(new RegExp('(^|'+TAG_OPEN+')const EXPORTED_CFG=.*;\\n','m'),(m,a)=>a)
+  .replace(/const SHOW_EDITOR\s*=\s*\w+;/,()=>`const EXPORTED_CFG=${j};\nconst SHOW_EDITOR = false;`)
+  .replace(new RegExp(LT+'title>[\\s\\S]*?'+LT+'\\/title>'),()=>LT+'title>'+esc(c.brand.name)+' | '+esc(c.brand.tagline)+LT+'/title>')
+  .replace(new RegExp(SEO_A+'[\\s\\S]*?'+SEO_B),'').replace(LT+'/head>',()=>seoTags(c)+LT+'/head>');
+}
+function loadTemplate(text,keepCfg){
+ const r=parse(text);src=text;PRES=r.P;
+ const keys=Object.keys(PRES);
+ $('#preset').innerHTML='<option value="">Load preset…</option>'+keys.map(k=>`<option>${esc(k)}</option>`).join('');
+ cfg=keepCfg||r.ex||clone(PRES[keys[0]]);
+ $('#welcome').style.display='none';idb.set('src',text).catch(()=>{});
+ hist=[];hi=-1;snap();drawTree();frLoaded=false;$('#fr').srcdoc=build(cfg);
 }
 
-function build(c) {
-  const base = generateProductionHtml(c);
-  const cfgTag = `<script id="studio-config" type="application/json">${JSON.stringify(c).replace(/</g,'\\u003c')}<\/script>`;
-  return base.replace('</head>', cfgTag + '\n</head>');
+/* ---------- generic form generator ---------- */
+const lab=k=>String(k).replace(/([A-Z])/g,' $1').replace(/_/g,' ');
+const KEYENUM={frame:['plain','rounded','cinema','polaroid','tv','neon','browser'],source:['auto','file','youtube','vimeo'],titlePos:['below','above']};
+const ENUM={'model3d.model':['cafe','pizza','burger','glb'],'theme.mode':['light','dark']};
+const pa=p=>esc(JSON.stringify(p));
+function summ(v,i){
+ if(v&&typeof v==='object'&&!Array.isArray(v)){for(const k of ['name','title','label','id','tag','author','v','text'])if(typeof v[k]==='string'&&v[k])return v[k].slice(0,36)}
+ else if(Array.isArray(v))return v.join(' · ').slice(0,36);
+ return typeof v==='string'&&v?v.slice(0,36):'item '+(i+1);
+}
+function field(v,p,showLabel=true){
+ const k=p[p.length-1],ps=p.join('.'),a=`data-p="${pa(p)}"`,inV=ps.indexOf('videos')>-1,vid=inV&&(k==='url'||k==='altUrl'),opts=ENUM[ps]||(inV&&KEYENUM[k]);let h;
+ if(typeof v==='boolean')h=`<input type="checkbox" ${a} data-t="b" ${v?'checked':''}>`;
+ else if(typeof v==='number')h=`<input type="number" step="any" class="i" ${a} data-t="n" value="${v}">`;
+ else if(opts)h=`<select class="i" ${a} data-t="s">${opts.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('')}</select>`;
+ else if(/^#[0-9a-f]{6}$/i.test(v))h=`<div class="row"><input type="color" ${a} data-t="s" value="${v}"><code>${v}</code></div>`;
+ else if((/img|image|poster/i.test(k)&&typeof k==='string')||k==='glbUrl'||vid){
+  const emb=String(v).startsWith('data:'),glb=k==='glbUrl'||vid;
+  h=`<div class="row">${glb?'':`<img class="th" src="${esc(v)}" onerror="this.style.visibility='hidden'">`}<input class="i" ${a} data-t="s" ${emb?'disabled value="(uploaded file embedded)"':`value="${esc(v)}" placeholder="${vid?'YouTube / Vimeo / .mp4 link, or upload':'https://… or upload'}"`}><label class="b sm">Upload<input type="file" hidden data-up="${pa(p)}" accept="${vid?'video/*':glb?'.glb,.gltf':'image/*'}"></label></div>`;
+ }
+ else if(/^font/.test(k))h=`<input class="i" list="fonts" ${a} data-t="s" value="${esc(v)}">`;
+ else if(String(v).length>70||/^(text|desc|quote|p1|p2|html|customCss)$/.test(k))h=`<textarea class="i" ${a} data-t="s" rows="${/^(html|customCss)$/.test(k)?8:3}">${esc(v)}</textarea>`;
+ else h=`<input class="i" ${a} data-t="s" value="${esc(v)}" ${k==='id'?'list="ids"':''}>`;
+ return showLabel?`<label class="f"><span>${esc(lab(k))}</span>${h}</label>`:`<div style="flex:1;min-width:90px">${h}</div>`;
+}
+const isPrim=v=>v===null||typeof v!=='object';
+function body(v,p){return Object.keys(v).map(k=>child(v[k],[...p,k])).join('')}
+function child(v,p){
+ if(isPrim(v))return field(v,p);
+ const o=p.join('.');
+ return`<details data-o="${esc(o)}" ${opened.has(o)?'open':''}><summary>${esc(lab(p[p.length-1]))}</summary><div class="in">${Array.isArray(v)?list(v,p):body(v,p)}</div></details>`;
+}
+function list(v,p){
+ if(v.every(isPrim))return`<div class="row" style="flex-wrap:wrap">${v.map((x,i)=>field(x,[...p,i],false)).join('')}</div>`;
+ return v.map((it,i)=>{const q=[...p,i],o=q.join('.'),btn=(a,t,ti)=>`<span class="b sm" data-a="${a}" data-p="${pa(p)}" data-i="${i}" title="${ti}">${t}</span>`;
+  return`<details data-o="${esc(o)}" ${opened.has(o)?'open':''}><summary><span class="b sm" draggable="true" data-drag="${esc(o)}" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</span>${esc(summ(it,i))}<span style="flex:1"></span>${btn('up','↑','Move up')}${btn('down','↓','Move down')}${btn('dup','⧉','Duplicate')}${btn('del','✕','Delete')}</summary><div class="in">${isPrim(it)?field(it,q,false):Array.isArray(it)?list(it,q):body(it,q)}</div></details>`}).join('')
+  +`<button class="b sm" data-a="add" data-p="${pa(p)}">+ Add</button>`;
+}
+function drawTree(){
+ const t=$('#tree'),st=$('#side').scrollTop;
+ t.innerHTML=Object.keys(cfg).map(k=>child(cfg[k],[k])).join('');
+ $('#side').scrollTop=st;
 }
 
-function preview() { $('#fr').srcdoc = build(cfg); }
-
-/* ═══════════════════════════════════════════════════════════════════
-   STATE
-   ═══════════════════════════════════════════════════════════════════ */
-let cfg = null;
-let hist = [];
-let hi = -1;
-let opened = new Set();
-let saveTimer = null;
-let codeTab = 'css';
-
-const PRES = DEFAULT_PRESETS;
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const clone = o => JSON.parse(JSON.stringify(o));
-const get = p => p.reduce((o,k) => o[k], cfg);
-const set = (p,v) => { get(p.slice(0,-1))[p[p.length-1]] = v; };
-
-const store = {
-  get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
-  set: (k,v) => { try { localStorage.setItem(k,v); } catch(e) {} },
-  del: k => { try { localStorage.removeItem(k); } catch(e) {} }
-};
-
-function msg(text, icon='sparkles', undoable=false) {
-  const m = $('#msg');
-  m.innerHTML = `<i class="fa-solid fa-${icon}"></i> <span>${esc(text)}</span>${undoable ? '<button class="undo-btn">Undo</button>' : ''}`;
-  m.classList.add('show');
-  clearTimeout(msg.t);
-  msg.t = setTimeout(() => m.classList.remove('show'), undoable ? 4200 : 2600);
-  if (undoable) m.querySelector('.undo-btn').onclick = () => { if (hi > 0) { hi--; restore(); msg('Undone','rotate-left'); } };
-}
-
-function flashSaved() {
-  const ind = $('#save-indicator');
-  ind.querySelector('span:last-child').textContent = 'Saved · ' + new Date().toLocaleTimeString();
-  ind.classList.add('show');
-  clearTimeout(flashSaved.t);
-  flashSaved.t = setTimeout(() => ind.classList.remove('show'), 1400);
-}
-
-const readText = f => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsText(f); });
-const readURL = f => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(f); });
-const slug = () => ((cfg && cfg.brand && cfg.brand.name) || 'site').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'site';
-
-function download(name, text, type) {
-  const u = URL.createObjectURL(new Blob([text], { type }));
-  const a = document.createElement('a');
-  a.href = u; a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(u), 2000);
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   THEME
-   ═══════════════════════════════════════════════════════════════════ */
-function applyTheme(t) {
-  document.documentElement.dataset.theme = t;
-  store.set('studio_theme', t);
-  const icon = $('#theme-toggle i');
-  if (icon) icon.className = t === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-}
-$('#theme-toggle').onclick = () => {
-  const cur = document.documentElement.dataset.theme || 'dark';
-  applyTheme(cur === 'light' ? 'dark' : 'light');
-  msg((cur === 'light' ? 'Dark' : 'Light') + ' mode', cur === 'light' ? 'moon' : 'sun');
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   HISTORY
-   ═══════════════════════════════════════════════════════════════════ */
-function snap() {
-  const s = JSON.stringify(cfg);
-  if (hist[hi] === s) return;
-  hist = hist.slice(0, hi + 1);
-  hist.push(s);
-  if (hist.length > 60) hist.shift();
-  hi = hist.length - 1;
-}
-function dirty(now) {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    snap(); preview();
-    try { store.set('studio_cfg_universal', JSON.stringify(cfg)); } catch(e) {}
-    flashSaved();
-  }, now ? 0 : 300);
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   TREE
-   ═══════════════════════════════════════════════════════════════════ */
-const lab = k => String(k).replace(/([A-Z])/g,' $1').replace(/_/g,' ');
-const pa = p => esc(JSON.stringify(p));
-
-function helpIcon(pathKey) {
-  const help = FIELD_HELP[pathKey];
-  if (!help) return '';
-  return `<span class="hint" data-tip="${esc(help)}" title="${esc(help)}">?</span>`;
-}
-
-function field(v, p, showLabel=true) {
-  const k = p[p.length-1];
-  const a = `data-p="${pa(p)}"`;
-  const pathKey = p.join('.');
-  let h;
-
-  if (typeof v === 'boolean') {
-    h = `<input type="checkbox" ${a} data-t="b" ${v?'checked':''} style="accent-color:var(--ac);width:16px;height:16px;cursor:pointer">`;
-  } else if (typeof v === 'number') {
-    h = `<input type="number" class="i" ${a} data-t="n" value="${v}">`;
-  } else if (pathKey === 'custom.css' || pathKey === 'custom.js') {
-    h = `<textarea class="i code-inline" ${a} data-t="s" spellcheck="false" placeholder="${pathKey === 'custom.css' ? '/* Custom CSS… */' : '// Custom JavaScript…'}">${esc(v)}</textarea>`;
-  } else if (/^#[0-9a-f]{6}$/i.test(v)) {
-    h = `<div class="row"><input type="color" ${a} data-t="s" value="${v}" style="width:40px;height:30px;border:0;background:none;cursor:pointer;border-radius:4px"><input class="i" style="font-family:monospace" ${a} data-t="s" value="${v}"></div>`;
-  } else if (k === 'logo' || k === 'favicon') {
-    const isImg = /^https?:|^data:/.test(v);
-    if (k === 'favicon') {
-      h = `<div class="row">${isImg ? `<img class="th-round" src="${esc(v)}">` : ''}<input class="i" ${a} data-t="s" value="${esc(v)}" placeholder="Upload a .png/.ico…"><label class="b sm" style="padding:6px 10px;cursor:pointer"><i class="fa-solid fa-upload"></i><input type="file" hidden data-up="${pa(p)}" accept="image/*,.ico"></label></div>`;
-    } else {
-      h = `<div class="row">
-        ${isImg ? `<img class="th-round" src="${esc(v)}">` : `<input class="i" ${a} data-t="s" value="${esc(v)}" placeholder="😀 or image URL" style="flex:1">`}
-        ${isImg ? `<input class="i" ${a} data-t="s" value="${esc(v)}" style="flex:1">` : ''}
-        <button class="b sm icon-only" data-emoji-pick="${pa(p)}" title="Pick emoji" style="padding:6px 9px"><i class="fa-solid fa-face-smile"></i></button>
-        <label class="b sm icon-only" title="Upload image" style="padding:6px 10px;cursor:pointer"><i class="fa-solid fa-upload"></i><input type="file" hidden data-up="${pa(p)}" accept="image/*"></label>
-      </div>`;
-    }
-  } else if (/img|image|heroImg|url$/i.test(k) && !/primaryUrl|secondaryUrl|ctaLink|favicon/i.test(k) && !/^https?:\/\/$/.test(v)) {
-    const isImg = /^https?:|^data:/.test(v);
-    h = `<div class="row">${isImg ? `<img class="th" src="${esc(v)}" onerror="this.style.display='none'">` : ''}<input class="i" ${a} data-t="s" value="${esc(v)}" placeholder="https:// or upload"><label class="b sm" title="Upload" style="padding:6px 10px;cursor:pointer"><i class="fa-solid fa-upload"></i><input type="file" hidden data-up="${pa(p)}" accept="image/*"></label></div>`;
-  } else if (/^font/.test(k)) {
-    h = `<input class="i" list="fonts" ${a} data-t="s" value="${esc(v)}">`;
-  } else if (String(v).length > 60 || /^(text|sub|desc|quote|a)$/.test(k)) {
-    h = `<textarea class="i" ${a} data-t="s">${esc(v)}</textarea>`;
-  } else {
-    h = `<input class="i" ${a} data-t="s" value="${esc(v)}">`;
-  }
-
-  return showLabel ? `<label class="f"><span>${esc(lab(k))} ${helpIcon(pathKey)}</span>${h}</label>` : `<div style="flex:1;min-width:80px">${h}</div>`;
-}
-
-function child(v, p) {
-  if (v === null || typeof v !== 'object') return field(v, p);
-  const o = p.join('.');
-  const isCustom = p[0] === 'custom';
-  const icon = isCustom ? '<i class="fa-solid fa-code" style="color:var(--ac);font-size:11px"></i>' : '';
-  return `<details data-o="${esc(o)}" ${opened.has(o) ? 'open' : ''}>
-    <summary><i class="fa-solid fa-chevron-right"></i> ${icon} ${esc(lab(p[p.length-1]))}</summary>
-    <div class="in">${Array.isArray(v) ? list(v, p) : body(v, p)}</div>
-  </details>`;
-}
-function body(v, p) { return Object.keys(v).map(k => child(v[k], [...p, k])).join(''); }
-
-function list(v, p) {
-  return v.map((it, i) => {
-    const q = [...p, i], o = q.join('.');
-    const btn = (a, t, ti) => `<span class="b sm" data-a="${a}" data-p="${pa(p)}" data-i="${i}" title="${ti}" style="padding:3px 8px;cursor:pointer">${t}</span>`;
-    const label = typeof it === 'object' ? (it.name || it.label || it.author || it.q || it.title || 'Item ' + (i+1)) : String(it);
-    return `<details data-o="${esc(o)}" ${opened.has(o) ? 'open' : ''}>
-      <summary>${esc(label)}<span style="flex:1"></span>${btn('up','↑','Up')}${btn('down','↓','Down')}${btn('dup','⧉','Copy')}${btn('del','✕','Del')}</summary>
-      <div class="in">${typeof it === 'object' && it !== null ? (Array.isArray(it) ? list(it, q) : body(it, q)) : field(it, q, false)}</div>
-    </details>`;
-  }).join('') + `<button class="b sm" data-a="add" data-p="${pa(p)}" style="margin-top:8px"><i class="fa-solid fa-plus"></i> Add entry</button>`;
-}
-
-const ALL_SECTIONS = ["hero","about","catalog","reviews","contact","gallery","faq","cta"];
-const SECTION_ICONS = { hero:"image", about:"circle-info", catalog:"layer-group", reviews:"quote-left", contact:"envelope", gallery:"images", faq:"circle-question", cta:"bullhorn" };
-
-function sectionControls(key) {
-  const inOrder = (cfg._order || []).includes(key);
-  const idx = (cfg._order || []).indexOf(key);
-  const isOptional = !["hero","about","catalog","reviews","contact"].includes(key);
-  const ctl = (a, ic, ti) => `<button class="b sm" data-sec-a="${a}" data-sec-k="${key}" title="${ti}" style="padding:2px 7px;cursor:pointer"><i class="fa-solid fa-${ic}" style="font-size:10px"></i></button>`;
-  let buttons = '';
-  if (isOptional || inOrder) {
-    buttons += ctl('toggle', inOrder ? 'eye' : 'eye-slash', inOrder ? 'Hide section' : 'Show section');
-    if (inOrder) {
-      if (idx > 0) buttons += ctl('up', 'arrow-up', 'Move up');
-      if (idx < cfg._order.length - 1) buttons += ctl('down', 'arrow-down', 'Move down');
-    }
-    if (isOptional) buttons += ctl('del', 'trash', 'Remove section');
-  } else {
-    buttons += ctl('toggle', 'plus', 'Add section');
-  }
-  return `<div class="sec-ctrl">${buttons}</div>`;
-}
-
-function drawTree() {
-  const t = $('#tree');
-  const st = $('#side').scrollTop;
-  const order = cfg._order || [];
-
-  const sectionsHtml = ALL_SECTIONS
-    .filter(k => cfg[k])
-    .map(k => {
-      const isOff = !order.includes(k);
-      const open = opened.has(k);
-      return `<details data-o="${esc(k)}" data-section="${esc(k)}" class="${isOff ? 'section-off' : ''}" ${open ? 'open' : ''}>
-        <summary>
-          <i class="fa-solid fa-chevron-right"></i>
-          <i class="fa-solid fa-${SECTION_ICONS[k] || 'cube'}" style="color:var(--ac);font-size:11px"></i>
-          <span>${esc(lab(k))}</span>
-          ${sectionControls(k)}
-        </summary>
-        <div class="in">${body(cfg[k], [k])}</div>
-      </details>`;
-    }).join('');
-
-  const othersHtml = Object.keys(cfg)
-    .filter(k => !ALL_SECTIONS.includes(k) && k !== '_order')
-    .map(k => child(cfg[k], [k]))
-    .join('');
-
-  t.innerHTML = othersHtml + sectionsHtml;
-  $('#side').scrollTop = st;
-  renderNavPills();
-  updateCodeCounts();
-}
-
-function updateCodeCounts() {
-  const cssLen = (cfg.custom && cfg.custom.css) ? cfg.custom.css.length : 0;
-  const jsLen = (cfg.custom && cfg.custom.js) ? cfg.custom.js.length : 0;
-  const cssCount = $('#css-count');
-  const jsCount = $('#js-count');
-  if (cssCount) cssCount.textContent = cssLen;
-  if (jsCount) jsCount.textContent = jsLen;
-}
-
-function renderNavPills() {
-  const nav = $('#tree-nav');
-  const order = cfg._order || [];
-  nav.innerHTML = ALL_SECTIONS
-    .filter(k => cfg[k])
-    .map(k => {
-      const inOrder = order.includes(k);
-      const isOptional = !["hero","about","catalog","reviews","contact"].includes(k);
-      if (!inOrder && !isOptional) return '';
-      return `<span class="chip ${inOrder ? '' : 'off'}" data-jump="${esc(k)}">
-        <i class="fa-solid fa-${SECTION_ICONS[k] || 'cube'}" style="font-size:9px"></i>${esc(lab(k))}
-      </span>`;
-    }).join('');
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   TREE EVENTS
-   ═══════════════════════════════════════════════════════════════════ */
-const tree = $('#tree');
-
-tree.addEventListener('toggle', e => {
-  const o = e.target.dataset && e.target.dataset.o;
-  if (o) e.target.open ? opened.add(o) : opened.delete(o);
-}, true);
-
-tree.addEventListener('input', e => {
-  const t = e.target;
-  const p = t.dataset.p;
-  if (!p) return;
-  const v = t.dataset.t === 'b' ? t.checked : t.dataset.t === 'n' ? (+t.value || 0) : t.value;
-  set(JSON.parse(p), v);
-  if (t.type === 'color' && t.nextElementSibling) t.nextElementSibling.value = v;
-  if (t.dataset.t === 's' && t.previousElementSibling && t.previousElementSibling.type === 'color') {
-    t.previousElementSibling.value = v;
-  }
-  updateCodeCounts();
-  dirty();
-});
-
-tree.addEventListener('click', e => {
-  const secBtn = e.target.closest('[data-sec-a]');
-  if (secBtn) { e.preventDefault(); handleSectionAction(secBtn.dataset.secA, secBtn.dataset.secK); return; }
-  const emojiBtn = e.target.closest('[data-emoji-pick]');
-  if (emojiBtn) { e.preventDefault(); openEmojiPicker(emojiBtn); return; }
-  const b = e.target.closest('[data-a]');
-  if (!b) return;
-  e.preventDefault();
-  const arr = get(JSON.parse(b.dataset.p));
-  const i = +b.dataset.i;
-  const a = b.dataset.a;
-  if (a === 'add') arr.push(arr.length ? clone(arr[arr.length-1]) : { name:"New Item", desc:"Description" });
-  else if (a === 'dup') arr.splice(i+1, 0, clone(arr[i]));
-  else if (a === 'del') { if (arr.length < 1) return msg('Nothing to remove','triangle-exclamation'); arr.splice(i,1); }
-  else if (a === 'up' && i > 0) [arr[i-1],arr[i]] = [arr[i],arr[i-1]];
-  else if (a === 'down' && i < arr.length-1) [arr[i+1],arr[i]] = [arr[i],arr[i+1]];
-  drawTree();
-  dirty(true);
-});
-
-tree.addEventListener('change', async e => {
-  const t = e.target;
-  if (!t.dataset.up || !t.files[0]) return;
-  msg('Embedding image…','spinner');
-  set(JSON.parse(t.dataset.up), await readURL(t.files[0]));
-  drawTree();
-  dirty(true);
-  msg('Image applied','image');
-});
-
-function handleSectionAction(action, key) {
-  if (!cfg._order) cfg._order = [];
-  const order = cfg._order;
-  if (action === 'toggle') {
-    if (order.includes(key)) { order.splice(order.indexOf(key), 1); msg('Hid ' + lab(key), 'eye-slash', true); }
-    else { order.push(key); msg('Added ' + lab(key), 'eye', true); }
-  } else if (action === 'up') {
-    const i = order.indexOf(key);
-    if (i > 0) [order[i-1],order[i]] = [order[i],order[i-1]];
-  } else if (action === 'down') {
-    const i = order.indexOf(key);
-    if (i < order.length-1) [order[i+1],order[i]] = [order[i],order[i+1]];
-  } else if (action === 'del') {
-    if (!confirm('Remove the "' + lab(key) + '" section permanently?')) return;
-    delete cfg[key];
-    const i = order.indexOf(key);
-    if (i >= 0) order.splice(i, 1);
-    msg('Removed ' + lab(key), 'trash');
-  }
-  drawTree();
-  dirty(true);
-}
-
-$('#tree-nav').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  const key = chip.dataset.jump;
-  const det = document.querySelector(`details[data-section="${CSS.escape(key)}"]`);
-  if (!det) return;
-  det.open = true;
-  opened.add(key);
-  det.scrollIntoView({behavior:'smooth', block:'start'});
-  det.classList.add('highlight');
-  setTimeout(() => det.classList.remove('highlight'), 900);
-});
-
-$('#search').addEventListener('input', e => {
-  const q = e.target.value.trim().toLowerCase();
-  const tops = document.querySelectorAll('#tree > details');
-  tops.forEach(det => {
-    if (!q) { det.style.display = ''; return; }
-    const txt = det.textContent.toLowerCase();
-    const match = txt.includes(q);
-    det.style.display = match ? '' : 'none';
-    if (match && q.length > 1) det.open = true;
-  });
-});
-
-$('#expand-all').onclick = () => {
-  tree.querySelectorAll('details').forEach(d => { d.open = true; if (d.dataset.o) opened.add(d.dataset.o); });
-  msg('Expanded all', 'angles-down');
-};
-$('#collapse-all').onclick = () => {
-  tree.querySelectorAll('details').forEach(d => { d.open = false; if (d.dataset.o) opened.delete(d.dataset.o); });
-  msg('Collapsed all', 'angles-up');
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   EMOJI
-   ═══════════════════════════════════════════════════════════════════ */
-const EMOJIS = "✨⚡🔥💎🎯🎨🚀🌊🌸🌈☀️🌙⭐💫🪐🍀🌿🌱🍃🌴🍕🍔🍟🌮🍣🍜🍰☕🍷🍸🧁🍦🏆🥇🎁🎈🎉🎊💐🎀🛍️💼📈📊💡🔧🔨⚙️🛠️🧪🔬🩺💊🏥🏡🏢🏛️🏖️🗺️✈️🚗🚲🛴🚢🏔️🌋🏕️🎭🎬🎤🎧🎸🥁🎺📸📚✏️🖋️📝🗂️📁📌📎🔖🏷️🧲🔮🎲🃏👑💍👓🕶️🎩👒🧢👟👕👗👜🎒🐶🐱🦊🐼🐨🦁🐯🦄🐝🦋🌺🌻🌷🌹🥀🌼💐🎋🎍🎄🎃";
-const emojiPop = $('#emoji-pop');
-emojiPop.innerHTML = [...EMOJIS].map(ch => `<button data-emoji="${ch}">${ch}</button>`).join('');
-
-let emojiTarget = null;
-function openEmojiPicker(btn) {
-  emojiTarget = JSON.parse(btn.dataset.emojiPick);
-  const r = btn.getBoundingClientRect();
-  emojiPop.style.top = (r.bottom + window.scrollY + 6) + 'px';
-  emojiPop.style.left = Math.max(10, r.left + window.scrollX - 100) + 'px';
-  emojiPop.classList.add('show');
-}
-emojiPop.addEventListener('click', e => {
-  const b = e.target.closest('[data-emoji]');
-  if (!b || !emojiTarget) return;
-  set(emojiTarget, b.dataset.emoji);
-  emojiPop.classList.remove('show');
-  drawTree();
-  dirty(true);
-  msg('Emoji applied', 'face-smile');
-});
-document.addEventListener('click', e => {
-  if (!emojiPop.contains(e.target) && !e.target.closest('[data-emoji-pick]')) emojiPop.classList.remove('show');
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   SECTION ADD MENU
-   ═══════════════════════════════════════════════════════════════════ */
-const sectionMenu = $('#section-menu');
-const ALL_OPTIONAL = [
-  { key:'gallery', label:'Gallery', icon:'images', desc:'Grid of images' },
-  { key:'faq', label:'FAQ', icon:'circle-question', desc:'Q&A accordion' },
-  { key:'cta', label:'Call to Action', icon:'bullhorn', desc:'Big final prompt' },
-  { key:'catalog', label:'Catalog / Menu', icon:'layer-group', desc:'Cards of items' },
-  { key:'reviews', label:'Testimonials', icon:'quote-left', desc:'Client quotes' },
-  { key:'about', label:'About / Story', icon:'circle-info', desc:'Text + stats' }
-];
-
-$('#btn-add-section').onclick = e => {
-  e.stopPropagation();
-  const r = e.currentTarget.getBoundingClientRect();
-  sectionMenu.style.top = (r.bottom + window.scrollY + 6) + 'px';
-  sectionMenu.style.left = Math.max(10, r.left + window.scrollX) + 'px';
-  const existing = cfg._order || [];
-  sectionMenu.innerHTML = ALL_OPTIONAL.map(o => {
-    const alreadyIn = cfg[o.key] && existing.includes(o.key);
-    return `<button data-add-sec="${o.key}" ${alreadyIn ? 'disabled style="opacity:.45;cursor:not-allowed"' : ''}>
-      <i class="fa-solid fa-${o.icon}" style="color:var(--ac);width:16px"></i>
-      <div><div style="font-weight:600">${o.label}</div><div style="font-size:10.5px;color:var(--mu)">${o.desc}</div></div>
-      ${alreadyIn ? '<span class="badge-new">Added</span>' : ''}
-    </button>`;
-  }).join('');
-  sectionMenu.classList.add('show');
-};
-
-sectionMenu.addEventListener('click', e => {
-  const b = e.target.closest('[data-add-sec]');
-  if (!b || b.disabled) return;
-  const key = b.dataset.addSec;
-  if (!cfg[key]) {
-    if (OPTIONAL_SECTIONS[key]) cfg[key] = clone(OPTIONAL_SECTIONS[key]);
-    else if (key === 'catalog') cfg[key] = { title:"What We Offer", items:[{name:"New Item",desc:"Description",price:"$0",tag:"New"}] };
-    else if (key === 'reviews') cfg[key] = { badge:"Reviews", title:"What people say", quotes:[{quote:"Amazing!",author:"Client",role:"Customer"}] };
-    else if (key === 'about') cfg[key] = { badge:"About", title:"Our story", text:"Tell your story here.", stats:[{label:"Stat",val:"100"},{label:"Stat",val:"50"},{label:"Stat",val:"5"}] };
-  }
-  if (!cfg._order) cfg._order = [];
-  if (!cfg._order.includes(key)) cfg._order.push(key);
-  sectionMenu.classList.remove('show');
-  drawTree();
-  dirty(true);
-  msg('Added ' + lab(key), 'plus');
-});
-
-document.addEventListener('click', e => {
-  if (!sectionMenu.contains(e.target) && !e.target.closest('#btn-add-section')) sectionMenu.classList.remove('show');
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   PALETTES / FONTS
-   ═══════════════════════════════════════════════════════════════════ */
-$('#btn-palettes').onclick = () => {
-  const grid = $('#palette-grid');
-  grid.innerHTML = PALETTES.map((p, i) => `
-    <div class="picker-item" data-pal="${i}">
-      <div class="picker-swatches">
-        <span style="background:${p.bg}"></span>
-        <span style="background:${p.card}"></span>
-        <span style="background:${p.accent}"></span>
-        <span style="background:${p.text}"></span>
-      </div>
-      <div class="name">${p.name}</div>
-      <div class="sub">${p.light ? 'Light' : 'Dark'}</div>
-    </div>`).join('');
-  grid.onclick = e => {
-    const it = e.target.closest('[data-pal]');
-    if (!it) return;
-    const p = PALETTES[+it.dataset.pal];
-    if (!cfg.theme) cfg.theme = {};
-    cfg.theme.bg = p.bg; cfg.theme.card = p.card; cfg.theme.accent = p.accent; cfg.theme.text = p.text;
-    $('#palette-modal').classList.remove('show');
-    drawTree(); dirty(true);
-    msg('Applied ' + p.name, 'swatchbook');
-  };
-  $('#palette-modal').classList.add('show');
-};
-
-$('#btn-fonts').onclick = () => {
-  const grid = $('#font-grid');
-  grid.innerHTML = FONT_PAIRS.map((p, i) => `
-    <div class="picker-item" data-font="${i}">
-      <div class="name" style="font-family:'${p.h}',serif;font-size:16px">${p.h}</div>
-      <div class="sub" style="font-family:'${p.b}',sans-serif">+ ${p.b}</div>
-    </div>`).join('');
-  grid.onclick = e => {
-    const it = e.target.closest('[data-font]');
-    if (!it) return;
-    const p = FONT_PAIRS[+it.dataset.font];
-    if (!cfg.theme) cfg.theme = {};
-    cfg.theme.fontHeading = p.h; cfg.theme.fontBody = p.b;
-    $('#font-modal').classList.remove('show');
-    drawTree(); dirty(true);
-    msg('Applied ' + p.name, 'font');
-  };
-  $('#font-modal').classList.add('show');
-};
-
-$('#btn-emoji-hint').onclick = () => {
-  msg('Click the 😀 icon next to the Logo field to pick emoji', 'icons');
-  gotoSection('brand');
-};
-
-function gotoSection(key) {
-  const det = document.querySelector(`details[data-o="${CSS.escape(key)}"]`);
-  if (!det) return;
-  det.open = true;
-  opened.add(key);
-  det.scrollIntoView({behavior:'smooth', block:'start'});
-  det.classList.add('highlight');
-  setTimeout(() => det.classList.remove('highlight'), 900);
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   CODE EDITOR MODAL
-   ═══════════════════════════════════════════════════════════════════ */
-function openCodeModal() {
-  if (!cfg.custom) cfg.custom = { css:"", js:"" };
-  codeTab = 'css';
-  renderCodeTabs();
-  renderSnippets();
-  loadCodeIntoEditor();
-  $('#code-modal').classList.add('show');
-  setTimeout(() => $('#code-editor').focus(), 100);
-}
-function closeCodeModal() {
-  $('#code-modal').classList.remove('show');
-  // Ensure any pending edits are applied
-  applyCodeFromEditor();
-}
-function renderCodeTabs() {
-  $$('[data-code-tab]').forEach(b => {
-    b.classList.toggle('active', b.dataset.codeTab === codeTab);
-  });
-  const hint = codeTab === 'css'
-    ? '/* Paste or type your CSS here… */'
-    : '// Paste or type your JavaScript here…';
-  $('#code-editor').placeholder = hint;
-}
-function renderSnippets() {
-  const list = CODE_SNIPPETS[codeTab] || [];
-  $('#code-snippets').innerHTML =
-    `<span class="label">Snippets:</span>` +
-    list.map((s, i) => `<button data-snippet="${i}"><i class="fa-solid fa-plus" style="font-size:9px;margin-right:3px"></i>${esc(s.name)}</button>`).join('');
-}
-function loadCodeIntoEditor() {
-  const code = (cfg.custom && cfg.custom[codeTab]) || '';
-  $('#code-editor').value = code;
-}
-function applyCodeFromEditor() {
-  if (!cfg.custom) cfg.custom = { css:"", js:"" };
-  const val = $('#code-editor').value;
-  if (cfg.custom[codeTab] !== val) {
-    cfg.custom[codeTab] = val;
-    dirty(true);
-  }
-  updateCodeCounts();
-}
-
-$('#btn-code').onclick = openCodeModal;
-
-$$('[data-code-tab]').forEach(b => {
-  b.onclick = () => {
-    applyCodeFromEditor();
-    codeTab = b.dataset.codeTab;
-    renderCodeTabs();
-    renderSnippets();
-    loadCodeIntoEditor();
-  };
-});
-
-$('#code-snippets').addEventListener('click', e => {
-  const b = e.target.closest('[data-snippet]');
-  if (!b) return;
-  const snippet = CODE_SNIPPETS[codeTab][+b.dataset.snippet];
-  if (!snippet) return;
-  const ta = $('#code-editor');
-  const existing = ta.value.trim();
-  ta.value = existing
-    ? existing + '\n\n' + snippet.code
-    : snippet.code;
-  ta.focus();
-  ta.selectionStart = ta.selectionEnd = ta.value.length;
-  applyCodeFromEditor();
-  msg('Snippet added: ' + snippet.name, 'code');
-});
-
-$('#code-editor').addEventListener('input', () => {
-  // Debounced live update
-  clearTimeout(window.__codeDebounce);
-  window.__codeDebounce = setTimeout(applyCodeFromEditor, 400);
-});
-
-// Support Tab key inside editor
-$('#code-editor').addEventListener('keydown', e => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const ta = e.target;
-    const s = ta.selectionStart, end = ta.selectionEnd;
-    ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(end);
-    ta.selectionStart = ta.selectionEnd = s + 2;
-    applyCodeFromEditor();
-  }
-  // Ctrl+Enter applies and closes
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    e.preventDefault();
-    applyCodeFromEditor();
-    closeCodeModal();
-    msg('Code applied', 'check');
-  }
-});
-
-$('#code-apply').onclick = () => {
-  applyCodeFromEditor();
-  closeCodeModal();
-  msg('Code applied', 'check');
-};
-
-$('#code-clear').onclick = () => {
-  if (!confirm('Clear all ' + codeTab.toUpperCase() + ' code? This cannot be undone.')) return;
-  $('#code-editor').value = '';
-  applyCodeFromEditor();
-  msg('Cleared ' + codeTab.toUpperCase(), 'trash');
-};
-
-$('#code-copy').onclick = async () => {
-  try {
-    await navigator.clipboard.writeText($('#code-editor').value);
-    msg('Copied to clipboard', 'copy');
-  } catch(e) {
-    $('#code-editor').select();
-    document.execCommand('copy');
-    msg('Copied to clipboard', 'copy');
-  }
-};
-
-// Close code modal on backdrop click
-$('#code-modal').addEventListener('click', e => {
-  if (e.target.id === 'code-modal') closeCodeModal();
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   UNDO / REDO
-   ═══════════════════════════════════════════════════════════════════ */
-function restore() { cfg = JSON.parse(hist[hi]); drawTree(); preview(); }
-$('#undo').onclick = () => { if (hi > 0) { hi--; restore(); msg('Undo','rotate-left'); } };
-$('#redo').onclick = () => { if (hi < hist.length-1) { hi++; restore(); msg('Redo','rotate-right'); } };
-
-/* ═══════════════════════════════════════════════════════════════════
-   DEVICE PREVIEW
-   ═══════════════════════════════════════════════════════════════════ */
-$$('[data-w]').forEach(b => b.onclick = () => {
-  $$('[data-w]').forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  $('#wrap').style.width = b.dataset.w;
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   MOBILE TABS
-   ═══════════════════════════════════════════════════════════════════ */
-function setMobileView(mode) {
-  document.body.classList.remove('view-mode-editor','view-mode-preview');
-  document.body.classList.add('view-mode-' + mode);
-  $('#btn-tab-edit').classList.toggle('active', mode === 'editor');
-  $('#btn-tab-prev').classList.toggle('active', mode === 'preview');
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   PRESETS
-   ═══════════════════════════════════════════════════════════════════ */
-function switchPreset(k) {
-  const src = k === '__blank__' ? BLANK_CANVAS : PRES[k];
-  if (!src) return;
-  cfg = clone(src);
-  if (!cfg.custom) cfg.custom = { css:"", js:"" };
-  hist = []; hi = -1;
-  snap(); drawTree(); preview();
-  $('#welcome').classList.remove('show');
-  msg('Loaded · ' + (k === '__blank__' ? 'Blank Canvas' : k), 'wand-magic-sparkles');
-}
-
-function initPresetsDropdown() {
-  const s = $('#preset');
-  s.innerHTML = '<option value="">Switch preset…</option>' +
-    '<option value="__blank__">⬜ Blank Canvas</option>' +
-    Object.keys(PRES).map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
-  s.onchange = e => { if (e.target.value) switchPreset(e.target.value); e.target.value = ''; };
-
-  const cards = $('#preset-cards');
-  cards.innerHTML = Object.keys(PRES).map(k => {
-    const t = PRES[k].theme || {};
-    return `<div class="preset-card" data-preset="${encodeURIComponent(k)}">
-      <div class="preset-swatch">
-        <span style="background:${t.bg || '#000'}"></span>
-        <span style="background:${t.card || '#111'}"></span>
-        <span style="background:${t.accent || '#888'}"></span>
-      </div>
-      <h4>${PRES[k].brand.logo || '🏢'} ${esc(k)}</h4>
-      <p>${esc(PRES[k].brand.tagline || '')}</p>
-    </div>`;
-  }).join('');
-
-  cards.onclick = e => {
-    const card = e.target.closest('.preset-card');
-    if (card && card.dataset.preset) switchPreset(decodeURIComponent(card.dataset.preset));
-  };
-}
-
-$('#start-blank').onclick = () => switchPreset('__blank__');
-$('#start-demo').onclick = () => switchPreset('Desi Restaurant & Dhaba');
-$('#new-site').onclick = () => {
-  if (!confirm('Start a fresh blank site? Unsaved changes will be lost (they are auto-saved to your browser).')) return;
-  switchPreset('__blank__');
-};
-$('#skip-welcome').onclick = () => { $('#welcome').classList.remove('show'); msg('Welcome dismissed','forward'); };
-
-/* ═══════════════════════════════════════════════════════════════════
-   SAVE / EXPORT / IMPORT
-   ═══════════════════════════════════════════════════════════════════ */
-$('#export').onclick = () => {
-  download(slug() + '.html', build(cfg), 'text/html');
-  msg('Exported ' + slug() + '.html', 'cloud-arrow-down');
-};
-$('#save').onclick = () => {
-  download(slug() + '.project.json', JSON.stringify(cfg, null, 2), 'application/json');
-  msg('Saved project file', 'floppy-disk');
-};
-
-async function loadUploadedFile(file) {
-  const text = await readText(file);
-  const name = file.name.toLowerCase();
-  if (name.endsWith('.json')) {
-    try {
-      cfg = JSON.parse(text);
-      if (!cfg.custom) cfg.custom = { css:"", js:"" };
-      hist=[]; hi=-1; snap(); drawTree(); preview();
-      $('#welcome').classList.remove('show');
-      msg('Project loaded', 'file-code');
-    } catch (e) { msg('Invalid JSON file','triangle-exclamation'); }
-    return;
-  }
-  const match = text.match(/<script id="studio-config" type="application\/json">([\s\S]*?)<\/script>/);
-  if (match) {
-    try {
-      cfg = JSON.parse(match[1]);
-      if (!cfg.custom) cfg.custom = { css:"", js:"" };
-      msg('Imported site with embedded config', 'wand-magic-sparkles');
-    } catch (e) {
-      cfg = clone(PRES["Desi Restaurant & Dhaba"]);
-      msg('Could not parse config — using default', 'triangle-exclamation');
-    }
-  } else {
-    cfg = clone(PRES["Desi Restaurant & Dhaba"]);
-    msg('No embedded config — using default', 'info');
-  }
-  hist=[]; hi=-1; snap(); drawTree(); preview();
-  $('#welcome').classList.remove('show');
-}
-
-$('#f-tpl').onchange = e => { if (e.target.files[0]) loadUploadedFile(e.target.files[0]); };
-$('#f-first').onchange = e => { if (e.target.files[0]) loadUploadedFile(e.target.files[0]); };
-
-function getProjects() {
-  try { return JSON.parse(store.get('studio_projects') || '[]'); } catch (e) { return []; }
-}
-function setProjects(list) { store.set('studio_projects', JSON.stringify(list.slice(0, 8))); }
-
-$('#open-projects').onclick = () => { renderProjects(); $('#projects-modal').classList.add('show'); };
-
-function renderProjects() {
-  const list = getProjects();
-  const el = $('#proj-list');
-  if (!list.length) {
-    el.innerHTML = '<p style="color:var(--mu);font-size:12.5px;margin-top:14px;text-align:center">No saved projects yet.</p>';
-    return;
-  }
-  el.innerHTML = list.map((p, i) => `
-    <div class="proj-item">
-      <i class="fa-solid fa-file-lines" style="color:var(--ac)"></i>
-      <div class="meta">
-        <div class="name">${esc(p.name)}</div>
-        <div class="time">${new Date(p.savedAt).toLocaleString()}</div>
-      </div>
-      <button class="b" data-load="${i}">Load</button>
-      <button class="b warn" data-del="${i}"><i class="fa-solid fa-trash"></i></button>
-    </div>`).join('');
-  el.onclick = e => {
-    const l = e.target.closest('[data-load]');
-    const d = e.target.closest('[data-del]');
-    if (l) {
-      const list = getProjects();
-      cfg = clone(list[+l.dataset.load].cfg);
-      if (!cfg.custom) cfg.custom = { css:"", js:"" };
-      hist=[]; hi=-1; snap(); drawTree(); preview();
-      $('#projects-modal').classList.remove('show');
-      msg('Project loaded', 'bookmark');
-    } else if (d) {
-      const list = getProjects();
-      list.splice(+d.dataset.del, 1);
-      setProjects(list);
-      renderProjects();
-    }
-  };
-}
-
-$('#save-named').onclick = () => {
-  const name = prompt('Name this project:', (cfg.brand && cfg.brand.name) || 'Untitled');
-  if (!name) return;
-  const list = getProjects();
-  list.unshift({ name, savedAt: Date.now(), cfg: clone(cfg) });
-  setProjects(list);
-  renderProjects();
-  msg('Saved "' + name + '"', 'bookmark');
-};
-
-$('#export-all').onclick = () => {
-  download(slug() + '.project.json', JSON.stringify(cfg, null, 2), 'application/json');
-  msg('Exported project', 'download');
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   RESIZER
-   ═══════════════════════════════════════════════════════════════════ */
-(function setupResizer() {
-  const side = $('#side');
-  const resizer = $('#resizer');
-  let dragging = false, startX = 0, startW = 0;
-  const savedW = store.get('studio_side_w');
-  if (savedW && savedW.endsWith('px')) side.style.width = savedW;
-
-  resizer.addEventListener('mousedown', e => {
-    e.preventDefault();
-    dragging = true; startX = e.clientX; startW = side.getBoundingClientRect().width;
-    resizer.classList.add('dragging');
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  });
-  document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const w = Math.max(240, Math.min(startW + (e.clientX - startX), window.innerWidth - 220));
-    side.style.width = w + 'px';
-  });
-  document.addEventListener('mouseup', () => {
-    if (!dragging) return;
-    dragging = false;
-    resizer.classList.remove('dragging');
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-    store.set('studio_side_w', side.style.width);
-  });
-  resizer.addEventListener('dblclick', () => toggleSide());
-
-  resizer.addEventListener('touchstart', e => {
-    dragging = true; startX = e.touches[0].clientX; startW = side.getBoundingClientRect().width;
-    resizer.classList.add('dragging');
-  }, { passive:true });
-  document.addEventListener('touchmove', e => {
-    if (!dragging) return;
-    const w = Math.max(240, Math.min(startW + (e.touches[0].clientX - startX), window.innerWidth - 220));
-    side.style.width = w + 'px';
-  }, { passive:true });
-  document.addEventListener('touchend', () => {
-    if (!dragging) return;
-    dragging = false;
-    resizer.classList.remove('dragging');
-    store.set('studio_side_w', side.style.width);
-  });
-})();
-
-function toggleSide() {
-  const collapsed = document.body.classList.toggle('side-collapsed');
-  msg(collapsed ? 'Sidebar collapsed' : 'Sidebar shown', 'bars-staggered');
-}
-$('#toggle-side').onclick = toggleSide;
-
-/* ═══════════════════════════════════════════════════════════════════
-   KEYBOARD
-   ═══════════════════════════════════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  const mod = e.ctrlKey || e.metaKey;
-  if (e.key === 'Escape') {
-    $$('.modal.show').forEach(m => m.classList.remove('show'));
-    sectionMenu.classList.remove('show');
-    emojiPop.classList.remove('show');
-    return;
-  }
-  const inField = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
-  if (inField && !mod) return;
-  if (mod && e.key.toLowerCase() === 'z' && !e.shiftKey) { e.preventDefault(); $('#undo').click(); return; }
-  if (mod && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) { e.preventDefault(); $('#redo').click(); return; }
-  if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); $('#save').click(); return; }
-  if (mod && e.key.toLowerCase() === 'e') { e.preventDefault(); $('#export').click(); return; }
-  if (mod && e.key.toLowerCase() === 'b') { e.preventDefault(); toggleSide(); return; }
-  if (mod && e.key.toLowerCase() === 'd') { e.preventDefault(); $('#theme-toggle').click(); return; }
-  if (mod && e.key.toLowerCase() === 'k') { e.preventDefault(); openCodeModal(); return; }
-  if (!mod && e.key === '/' && !inField) { e.preventDefault(); $('#search').focus(); }
-});
-
-$('#help').onclick = () => $('#shortcut-modal').classList.add('show');
-$('#shortcut-modal').addEventListener('click', e => {
-  if (e.target.id === 'shortcut-modal') e.target.classList.remove('show');
-});
-
-/* ═══════════════════════════════════════════════════════════════════
-   TOUR
-   ═══════════════════════════════════════════════════════════════════ */
-const TOUR_STEPS = [
-  { title:'Welcome to Site Studio 👋', text:'A visual website builder. Everything you edit on the left appears instantly in the preview — no code needed.' },
-  { title:'📝 Edit content', text:'Click any field in the sidebar to edit text, colors, images, and more. Your changes save automatically to your browser.' },
-  { title:'🎨 Quick tools', text:'Use Palette and Fonts to instantly retheme. Section adds Gallery, FAQ, and CTA blocks. Icons opens the emoji picker.' },
-  { title:'⚡ Custom Code', text:'Click Code (or press Ctrl+K) to inject your own CSS and JavaScript. Handy snippets are one click away.' },
-  { title:'💾 Save & Export', text:'Save keeps a .json you can load later. Export downloads a finished, ready-to-publish .html file.' },
-  { title:'🎉 You\'re ready!', text:'Press ? in the header anytime for shortcuts and to replay this tour. Enjoy building!' }
-];
-let tourIdx = 0;
-const tourOverlay = $('#tour-overlay');
-
-function startTour() {
-  tourIdx = 0;
-  renderTour();
-  tourOverlay.classList.add('show');
-}
-function renderTour() {
-  const s = TOUR_STEPS[tourIdx];
-  $('#tour-title').textContent = s.title;
-  $('#tour-text').textContent = s.text;
-  $('#tour-progress').innerHTML = TOUR_STEPS.map((_, i) =>
-    `<span class="${i <= tourIdx ? 'active' : ''}"></span>`).join('');
-  $('#tour-next').textContent = tourIdx === TOUR_STEPS.length - 1 ? 'Finish' : 'Next →';
-}
-$('#tour-next').onclick = () => {
-  if (tourIdx >= TOUR_STEPS.length - 1) {
-    tourOverlay.classList.remove('show');
-    store.set('studio_tour_done', '1');
-  } else { tourIdx++; renderTour(); }
-};
-$('#tour-skip').onclick = () => {
-  tourOverlay.classList.remove('show');
-  store.set('studio_tour_done', '1');
-};
-$('#replay-tour').onclick = () => {
-  $('#shortcut-modal').classList.remove('show');
-  startTour();
-};
-
-/* ═══════════════════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════════════════ */
-(function init() {
-  applyTheme(store.get('studio_theme') || 'dark');
-  initPresetsDropdown();
-
-  const saved = store.get('studio_cfg_universal');
-  if (saved) {
-    try { cfg = JSON.parse(saved); } catch (e) { cfg = null; }
-  }
-  if (!cfg) cfg = clone(PRES["Desi Restaurant & Dhaba"]);
-
-  if (!cfg._order) cfg._order = ["hero","about","catalog","reviews","contact"];
-  if (!cfg.custom) cfg.custom = { css:"", js:"" };
-
-  if (saved) $('#welcome').classList.remove('show');
-
-  snap();
-  drawTree();
-  preview();
-
-  if (!store.get('studio_tour_done') && !saved) {
-    setTimeout(() => {
-      $('#welcome').classList.remove('show');
-      startTour();
-    }, 800);
-  } else if (!saved) {
-    setTimeout(() => msg('Welcome — pick a preset or start blank', 'wand-magic-sparkles'), 400);
-  }
-})();
+/* ---------- editing, history, preview ---------- */
+function snap(){const s=JSON.stringify(cfg);if(hist[hi]===s)return;hist=hist.slice(0,hi+1);hist.push(s);while(hist.length>(s.length>8e6?4:30))hist.shift();hi=hist.length-1}
+let editOn=true,paths=[];
+const SKIPK=/^(id|model|board|glbUrl|href|url|img|image|icon|badgeIcon|extraIcon|mode|fontHead|fontBody|customCss|html|type|endpoint|email|subject|key|altUrl|poster|source|frame|titlePos)$/i;
+/* Every visible text value gets an invisible marker so a click in the preview maps back to its exact config path. */
+function markCfg(){const ps=[],w=(v,p)=>{
+  if(typeof v==='string'){if(!v||SKIPK.test(String(p[p.length-1]))||p[0]==='theme'||p[0]==='seo'||/^(https?:|#|data:)/.test(v))return v;
+   const n=ps.push(p)-1;return'\u2063'+n.toString(2).replace(/0/g,'\u200b').replace(/1/g,'\u200c')+'\u2064'+v}
+  if(Array.isArray(v))return v.map((x,i)=>w(x,[...p,i]));
+  if(v&&typeof v==='object'){const o={};for(const k in v)o[k]=w(v[k],[...p,k]);return o}return v};
+ return{cfg:w(cfg,[]),paths:ps}}
+function preview(){if(!frLoaded)return;let c=cfg;if(editOn){const m=markCfg();c=m.cfg;paths=m.paths}
+ $('#fr').contentWindow.postMessage({studioCfg:c,studioEdit:editOn,studioVals:editOn?paths.map(p=>get(p)):[]},'*')}
+function reveal(p){for(let i=1;i<=p.length;i++)opened.add(p.slice(0,i).join('.'));drawTree();
+ const el=[...document.querySelectorAll('[data-p]')].find(x=>x.dataset.p===JSON.stringify(p));
+ if(el){el.scrollIntoView({block:'center'});el.focus()}}
+addEventListener('message',e=>{const d=e.data;if(!d||typeof d!=='object'||e.source!==$('#fr').contentWindow)return;
+ if('studioEditIdx' in d){const p=paths[d.studioEditIdx];if(p&&typeof d.value==='string'){set(p,d.value);drawTree();dirty(true)}}
+ else if('studioJump' in d){const p=paths[d.studioJump];if(p){reveal(p);msg('This text is edited in the form')}}});
+$('#editbtn').onclick=()=>{editOn=!editOn;const b=$('#editbtn');b.setAttribute('aria-pressed',editOn);b.style.borderColor=editOn?'var(--ac)':'';preview();msg(editOn?'Click-to-edit ON: click text in the preview':'Click-to-edit OFF: preview links and buttons work')};
+const ask=t=>new Promise(ok=>{$('#dlg-t').textContent=t;const D=$('#dlg');D.style.display='flex';$('#dlg-y').focus();const done=v=>{D.style.display='none';ok(v)};$('#dlg-y').onclick=()=>done(true);$('#dlg-n').onclick=()=>done(false)});
+/* drag to reorder list items */
+let dragO=null;
+$('#tree').addEventListener('dragstart',e=>{const h=e.target.closest&&e.target.closest('[data-drag]');if(!h)return;dragO=h.dataset.drag;if(e.dataTransfer){e.dataTransfer.setData('text/plain',dragO);e.dataTransfer.effectAllowed='move'}});
+$('#tree').addEventListener('dragover',e=>{if(dragO&&e.target.closest('details[data-o]'))e.preventDefault()});
+$('#tree').addEventListener('drop',e=>{const t=e.target.closest('details[data-o]');if(!dragO||!t)return;e.preventDefault();
+ const a=dragO.split('.'),b=t.dataset.o.split('.');dragO=null;
+ if(a.length!==b.length||a.slice(0,-1).join('.')!==b.slice(0,-1).join('.'))return;
+ const arr=get(a.slice(0,-1)),i=+a[a.length-1],j=+b[b.length-1];if(i===j||!Array.isArray(arr))return;
+ arr.splice(j,0,arr.splice(i,1)[0]);drawTree();dirty(true)});
+function dirty(now){clearTimeout(tm);tm=setTimeout(()=>{snap();preview();save()},now?0:350)}
+$('#fr').onload=()=>{frLoaded=true;preview()};
+const tree=$('#tree');
+tree.addEventListener('toggle',e=>{const o=e.target.dataset&&e.target.dataset.o;if(o)e.target.open?opened.add(o):opened.delete(o)},true);
+tree.addEventListener('input',e=>{const t=e.target,p=t.dataset.p;if(!p)return;
+ const v=t.dataset.t==='b'?t.checked:t.dataset.t==='n'?(+t.value||0):t.value;
+ set(JSON.parse(p),v);if(t.type==='color')t.nextElementSibling.textContent=v;
+ const pp=JSON.parse(p);if(pp[0]==='theme'&&/^#[0-9a-f]{6}$/i.test(v)){const T=cfg.theme;try{const lo=ratio(T.accent,T.lightBg),dk=ratio(T.accent,T.darkBg);if(lo<3||dk<3)msg('⚠ Low contrast: accent text is hard to read on the '+(lo<3&&dk<3?'light and dark':lo<3?'light':'dark')+' background ('+Math.min(lo,dk).toFixed(1)+':1, aim for 3+).')}catch(x){}}
+ dirty()});
+tree.addEventListener('click',e=>{const s=e.target.closest('summary');if(!s||e.target.closest('[data-a]'))return;const d=s.parentElement,o=d.dataset.o;
+ if(o&&o.indexOf('.')<0&&!d.open&&frLoaded)$('#fr').contentWindow.postMessage({studioScroll:o},'*')});
+tree.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;e.preventDefault();
+ const arr=get(JSON.parse(b.dataset.p)),i=+b.dataset.i,a=b.dataset.a;
+ if(a==='add')arr.push(arr.length?clone(arr[arr.length-1]):'');
+ else if(a==='dup')arr.splice(i+1,0,clone(arr[i]));
+ else if(a==='del'){if(arr.length<2)return msg('Keep at least one item (to hide a whole section, untick its "on" box).');arr.splice(i,1)}
+ else if(a==='up'&&i>0)[arr[i-1],arr[i]]=[arr[i],arr[i-1]];
+ else if(a==='down'&&i<arr.length-1)[arr[i+1],arr[i]]=[arr[i],arr[i+1]];
+ drawTree();dirty(true)});
+tree.addEventListener('change',async e=>{const t=e.target;if(!t.dataset.up||!t.files[0])return;const f=t.files[0];
+ msg('Processing file…');
+ set(JSON.parse(t.dataset.up),(/^image\//.test(f.type)&&f.type!=='image/svg+xml')?await shrink(f):await readURL(f));
+ drawTree();dirty(true);msg(f.size>(/^video\//.test(f.type)?5e6:3e6)?'⚠ '+(f.size/1e6).toFixed(1)+' MB embedded: adds ~33% and makes the page heavy. For videos, host the file (or use YouTube/Vimeo) and paste the link instead.':'File embedded')});
+
+function restore(){cfg=JSON.parse(hist[hi]);drawTree();preview()}
+$('#undo').onclick=()=>{snap();if(hi>0){hi--;restore()}};
+$('#redo').onclick=()=>{if(hi<hist.length-1){hi++;restore()}};
+$('#preset').onchange=async e=>{const k=e.target.value;e.target.value='';if(k&&await ask('Replace ALL current content with the "'+k+'" preset? You can undo this.')){cfg=clone(PRES[k]);drawTree();dirty(true)}};
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>$('#wrap').style.width=b.dataset.w);
+$('#export').onclick=()=>{if(!cfg)return msg('Open the template first');download(slug()+'.html',build(cfg),'text/html');msg('Exported '+slug()+'.html')};
+$('#save').onclick=()=>{if(!cfg)return msg('Open the template first');download(slug()+'.project.json',JSON.stringify(cfg,null,2),'application/json');msg('Project saved')};
+$('#f-proj').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!cfg)return msg('Open the template first');
+ try{cfg=merge(clone(PRES[Object.keys(PRES)[0]]),JSON.parse(await readText(f)));drawTree();dirty(true);msg('Project loaded')}catch(x){msg('Invalid project file: '+x.message)}};
+
+/* ---------- opening the template ---------- */
+async function openFile(f){if(!f)return;try{loadTemplate(await readText(f))}catch(x){alert(x.message)}}
+$('#f-tpl').onchange=e=>{openFile(e.target.files[0]);e.target.value=''};
+$('#f-first').onchange=e=>{openFile(e.target.files[0]);e.target.value=''};
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)openFile(f)});
+addEventListener('beforeunload',e=>{if(cfg&&hi>0){e.preventDefault();e.returnValue=''}});
+(async function boot(){try{const s=await idb.get('src');if(!s)return;let c=null;try{c=JSON.parse((await idb.get('cfg'))||'null')}catch(x){}loadTemplate(s,c||undefined)}catch(x){}})();
 </script>
 </body>
 </html>
